@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "786967532151",
+    "project_id": "sejahtera-bea87",
+    "storage_bucket": "sejahtera-bea87.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786967532151:android:7e37932d2a587c164b6c72",
+        "android_client_info": {
+          "package_name": "com.sejahtera.my"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "786967532151-8a9off5c996e57enjr7n3d41qpfh798a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sejahtera.my",
+            "certificate_hash": "258c2692350461628be24edc9b5299d8f2f9be23"
+          }
+        },
+        {
+          "client_id": "786967532151-11ujq3h3ovu76kn405fils89s2qla5jj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDb9_1mRQNmYVNY1gXBp5S0g_bno00-Hss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "786967532151-11ujq3h3ovu76kn405fils89s2qla5jj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
