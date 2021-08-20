@@ -18,6 +18,6 @@ class AppStyles {
     height: 4,
     fontWeight: FontWeight.bold,
     color: Colors.black,
-    fontSize: 40.0,
+    fontSize: 20.0,
   );
 }

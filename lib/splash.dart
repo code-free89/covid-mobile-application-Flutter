@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,19 +13,16 @@ class SplashState extends State<SplashScreen> {
   // Init variables
   Timer _timer = new Timer(Duration.zero, () {});
   int duration = 3;
+  bool isFirebaseConnected = false;
 
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       oneSec,
       (Timer timer) {
-        if (duration == 0) {
+        if (isFirebaseConnected == true) {
           _timer.cancel();
           Navigator.popAndPushNamed(context, '/start');
-        } else {
-          setState(() {
-            duration--;
-          });
         }
       },
     );
@@ -36,6 +34,10 @@ class SplashState extends State<SplashScreen> {
       Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
       final SharedPreferences prefs = await _prefs;
       prefs.getString("app-name");
+      await Firebase.initializeApp();
+      setState(() {
+        isFirebaseConnected = true;
+      });
     } catch (err) {
       /// setMockInitialValues initiates shared preference
       /// Adds app-name
