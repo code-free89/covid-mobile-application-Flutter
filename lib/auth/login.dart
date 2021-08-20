@@ -147,7 +147,9 @@ class _LogInState extends State<LogIn> {
                   ),
                   TextButton(
                     child: Text("ForgotPassword?"),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/reset");
+                    },
                   ),
                   Text(
                     "Need Help?",

@@ -11,13 +11,39 @@ class AppStyles {
     fontSize: 10,
     fontWeight: FontWeight.normal,
   );
+  static TextStyle grayText12 = defaultText.copyWith(
+    color: Colors.black26,
+    fontSize: 12,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle grayText15 = defaultText.copyWith(
+    color: Colors.black38,
+    fontSize: 15,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle subTitleText = defaultText.copyWith(
+    color: Colors.black87,
+    fontSize: 15,
+    fontWeight: FontWeight.normal,
+  );
   static TextStyle normalText = defaultText.copyWith(
     height: 2,
   );
   static TextStyle titleText = defaultText.copyWith(
-    height: 4,
     fontWeight: FontWeight.bold,
     color: Colors.black,
     fontSize: 20.0,
+  );
+  static TextStyle descriptionText = defaultText.copyWith(
+    height: 2,
+    fontWeight: FontWeight.normal,
+    fontSize: 15,
+    color: Colors.black38,
+  );
+  static TextStyle disableText = defaultText.copyWith(
+    color: Colors.lightBlue,
+  );
+  static TextStyle greenText = defaultText.copyWith(
+    color: Colors.lightGreen,
   );
 }
