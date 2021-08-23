@@ -14,6 +14,22 @@ class PhoneNumberInput extends StatefulWidget {
 }
 
 class _PhoneNumberInputState extends State<PhoneNumberInput> {
+  String isoCode = "";
+  PhoneNumber initialNumber = PhoneNumber();
+  void getPhoneNumberInfo() async {
+    PhoneNumber number =
+        await PhoneNumber.getRegionInfoFromPhoneNumber(widget.initialValue);
+    setState(() {
+      initialNumber = number;
+    });
+  }
+
+  @override
+  void initState() {
+    getPhoneNumberInfo();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,7 +43,7 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
           trailingSpace: false,
           showFlags: false,
         ),
-        initialValue: PhoneNumber(phoneNumber: widget.initialValue),
+        initialValue: initialNumber,
         maxLength: 15,
         ignoreBlank: false,
         autoValidateMode: AutovalidateMode.disabled,
@@ -43,6 +59,7 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
           fillColor: Colors.black12,
           hoverColor: Colors.black12,
         ),
+        isEnabled: widget.initialValue == "" ? true : false,
         hintText: "Mobile Number",
       ),
     );

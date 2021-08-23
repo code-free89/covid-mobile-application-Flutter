@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:covid/auth/verification.dart';
 import 'package:covid/providers/authProvider.dart';
 import 'package:covid/services/database.dart';
 import 'package:covid/utils/enums.dart';
@@ -28,27 +29,34 @@ class _RegisterState extends State<Register> {
     TextEditingController emailController = new TextEditingController();
 
     void registerUser() async {
+      var userData = getUserData(context);
+      userData["email"] = "";
+      userData["phoneNumber"] = "";
       if (_logInMode == LogInMode.phone) {
         try {
-          PhoneNumber number =
-              await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber);
-          int countryCodeLength = number.dialCode?.length ?? 0;
-          // if (phoneNumber.length - countryCodeLength < 11)
-          //   showToast("Invalid phone number");
-          // else {
-          // Navigator.pushNamed(context, "/verification");
-          await FirebaseAuth.instance.verifyPhoneNumber(
-            phoneNumber: phoneNumber,
-            verificationCompleted: (user) {
-              print(user);
-            },
-            verificationFailed: (e) {
-              print(e);
-            },
-            codeSent: (String verificationId, int? resendToken) {},
-            codeAutoRetrievalTimeout: (String verificationId) {},
-          );
-          // }
+          if (phoneNumber.length > 5) {
+            await FirebaseAuth.instance.verifyPhoneNumber(
+              phoneNumber: phoneNumber,
+              verificationCompleted: (PhoneAuthCredential user) {
+                print("phone auth completed");
+              },
+              verificationFailed: (e) {},
+              codeSent: (String verificationId, int? resendToken) {
+                userData["phoneNumber"] = phoneNumber;
+                setUserData(context, userData);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        Verification(verificationId: verificationId),
+                  ),
+                );
+              },
+              codeAutoRetrievalTimeout: (String verificationId) {},
+            );
+          } else {
+            showToast("Invalid phone number");
+          }
         } catch (e) {
           showToast("Invalid phone number");
           print(e);
@@ -67,8 +75,11 @@ class _RegisterState extends State<Register> {
           userData["email"] = email;
           setUserData(context, userData);
           await user.user!.sendEmailVerification();
-          Navigator.pushNamed(context, "/setupProfile1");
+          Navigator.pushNamed(context, "/verification");
         } catch (e) {
+          if (e.toString().indexOf("already") >= 0) {
+            showToast("Email is already exist.");
+          }
           print(e);
         }
       }
@@ -133,6 +144,7 @@ class _RegisterState extends State<Register> {
                             focusColor: Colors.black12,
                             fillColor: Colors.black12,
                             hoverColor: Colors.black12,
+                            labelText: "Mobile Number",
                           ),
                           hintText: "Mobile Number",
                         )
@@ -176,7 +188,7 @@ class _RegisterState extends State<Register> {
                             : LogInMode.phone;
                       });
                     },
-                  )
+                  ),
                 ],
               )
             ],

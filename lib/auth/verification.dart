@@ -1,10 +1,16 @@
 import 'dart:async';
 
+import 'package:covid/components/textbox.dart';
+import 'package:covid/components/textedit.dart';
+import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Verification extends StatefulWidget {
-  const Verification({Key? key}) : super(key: key);
+  final String verificationId;
+  const Verification({required this.verificationId, Key? key})
+      : super(key: key);
 
   @override
   _VerificationState createState() => _VerificationState();
@@ -15,6 +21,7 @@ class _VerificationState extends State<Verification> {
   Timer _timer = new Timer(Duration.zero, () {});
   int duration = 300;
   bool isLimit = true;
+  String verificationId = "";
 
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
@@ -37,12 +44,51 @@ class _VerificationState extends State<Verification> {
     );
   }
 
-  void onSubmit() {
-    Navigator.popAndPushNamed(context, "/setupProfile1");
+  void onSubmit() async {
+    if (duration == 0) {
+      showToast("Your OTP code is expired");
+    } else {
+      try {
+        PhoneAuthCredential _credential = PhoneAuthProvider.credential(
+            verificationId: verificationId, smsCode: otpController.value.text);
+        await FirebaseAuth.instance.signInWithCredential(_credential);
+        Navigator.popAndPushNamed(context, "/setupProfile1");
+      } catch (e) {
+        print(e);
+        showToast("Invalid OTP code");
+      }
+    }
+  }
+
+  void resendOTP() async {
+    if (duration != 0) return;
+    try {
+      var userData = getUserData(context);
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: userData["phoneNumber"],
+        verificationCompleted: (PhoneAuthCredential user) {},
+        verificationFailed: (e) {},
+        codeSent: (String verificationId, int? resendToken) {
+          setState(() {
+            this.verificationId = verificationId;
+          });
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+      setState(() {
+        duration = 300;
+      });
+      startTimer();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
   void initState() {
+    setState(() {
+      verificationId = widget.verificationId;
+    });
     super.initState();
     startTimer();
   }
@@ -90,29 +136,31 @@ class _VerificationState extends State<Verification> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("OTP verification", style: AppStyles.titleText),
-                  Text(
-                    "Enter the OTP sent to you registered phone number/email address prince891028@gmail.com",
-                    style: AppStyles.grayText10,
+                  TextBox(
+                    value: "OTP verification",
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    padding: 10,
                   ),
-                  SizedBox(height: 15),
-                  Text(
-                    "OTP",
-                    style: AppStyles.subTitleText,
+                  TextBox(
+                    value:
+                        "Enter the OTP sent to you registered phone number/email address prince891028@gmail.com",
+                    fontColor: Colors.black38,
+                    fontSize: 13,
+                    padding: 15,
                   ),
-                  SizedBox(height: 10),
-                  TextFormField(
+                  TextBox(
+                    value: "OTP",
+                    fontColor: Colors.black87,
+                    fontSize: 15,
+                    padding: 10,
+                  ),
+                  TextEdit(
                     controller: otpController,
-                    keyboardType: TextInputType.emailAddress,
-                    textAlign: TextAlign.center,
                     maxLength: 6,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                    ),
+                    type: "number",
+                    textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -129,6 +177,9 @@ class _VerificationState extends State<Verification> {
                                   ? AppStyles.disableText
                                   : AppStyles.defaultText,
                             ),
+                            onTap: () {
+                              resendOTP();
+                            },
                           ),
                         ],
                       ),

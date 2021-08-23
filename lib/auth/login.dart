@@ -46,12 +46,10 @@ class _LogInState extends State<LogIn> {
                             trailingSpace: false,
                             showFlags: false,
                           ),
-                          maxLength: 10,
+                          maxLength: 15,
                           ignoreBlank: false,
                           autoValidateMode: AutovalidateMode.disabled,
                           selectorTextStyle: TextStyle(color: Colors.black),
-                          // initialValue: number,
-                          // textFieldController: controller,
                           formatInput: true,
                           keyboardType: TextInputType.numberWithOptions(
                               signed: true, decimal: true),
@@ -62,11 +60,9 @@ class _LogInState extends State<LogIn> {
                             focusColor: Colors.black12,
                             fillColor: Colors.black12,
                             hoverColor: Colors.black12,
+                            labelText: "Mobile Number",
                           ),
                           hintText: "Mobile Number",
-                          onSaved: (PhoneNumber number) {
-                            print('On Saved: $number');
-                          },
                         )
                       : TextFormField(
                           controller: emailController,

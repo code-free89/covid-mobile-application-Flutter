@@ -1,3 +1,4 @@
+import 'package:covid/auth/email_verification.dart';
 import 'package:covid/auth/login.dart';
 import 'package:covid/auth/profile/step1.dart';
 import 'package:covid/auth/profile/step2.dart';
@@ -6,7 +7,6 @@ import 'package:covid/auth/profile/success.dart';
 import 'package:covid/auth/register.dart';
 import 'package:covid/auth/forget.dart';
 import 'package:covid/auth/start.dart';
-import 'package:covid/auth/verification.dart';
 import 'package:covid/providers/authProvider.dart';
 import 'package:covid/splash.dart';
 import 'package:covid/utils/palett.dart';
@@ -40,11 +40,11 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LogIn(),
         '/register': (context) => Register(),
         '/reset': (context) => ForgetPassword(),
-        '/verification': (context) => Verification(),
         '/setupProfile1': (context) => SetupProfile1(),
         '/setupProfile2': (context) => SetupProfile2(),
         '/setupProfile3': (context) => SetupProfile3(),
         '/profileSuccess': (context) => ProfileSuccess(),
+        '/verification': (context) => EmailVerification(),
       },
     );
   }

@@ -9,6 +9,8 @@ class TextEdit extends StatefulWidget {
   final String type;
   final double padding;
   final bool readOnly;
+  final int maxLength;
+  final TextAlign textAlign;
   const TextEdit(
       {this.labelText = "",
       this.hintText = "",
@@ -16,6 +18,8 @@ class TextEdit extends StatefulWidget {
       this.type = "string",
       this.padding = 10,
       this.readOnly = false,
+      this.maxLength = 100,
+      this.textAlign = TextAlign.start,
       Key? key})
       : super(key: key);
 
@@ -29,6 +33,7 @@ class _TextEditState extends State<TextEdit> {
     return Container(
       padding: EdgeInsets.only(bottom: widget.padding),
       child: TextFormField(
+        textAlign: widget.textAlign,
         controller: widget.controller,
         keyboardType: TextInputType.emailAddress,
         inputFormatters: widget.type == "number"

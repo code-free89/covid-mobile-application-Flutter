@@ -3,9 +3,8 @@ import 'package:covid/components/phone.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/components/textedit.dart';
 import 'package:covid/utils/functions.dart';
-import 'package:covid/utils/styles.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class SetupProfile1 extends StatefulWidget {
   const SetupProfile1({Key? key}) : super(key: key);
@@ -33,9 +32,16 @@ class _SetupProfile1State extends State<SetupProfile1> {
   @override
   Widget build(BuildContext context) {
     var userData = getUserData(context);
-    setState(() {
-      emailController.value = new TextEditingValue(text: userData["email"]);
-    });
+    if (userData["email"] != "") {
+      setState(() {
+        emailController.value = new TextEditingValue(text: userData["email"]);
+      });
+    }
+    if (userData["phoneNumber"] != "") {
+      setState(() {
+        phoneNumber = userData["phoneNumber"];
+      });
+    }
 
     void onSubmit() {
       try {
@@ -48,6 +54,13 @@ class _SetupProfile1State extends State<SetupProfile1> {
           userData["name"] = nameController.value.text;
           userData["passportNo"] = passportController.value.text;
           userData["age"] = int.parse(ageController.value.text);
+          if (userData["email"] != "")
+            userData["phoneNumber"] = phoneNumber;
+          else if (!EmailValidator.validate(emailController.value.text)) {
+            showToast("Invalid email address");
+            return;
+          } else
+            userData["email"] = emailController.value.text;
           setUserData(context, userData);
           Navigator.pushNamed(context, "/setupProfile2");
         }
@@ -105,7 +118,12 @@ class _SetupProfile1State extends State<SetupProfile1> {
                       labelText: "Full Name",
                       hintText: "Full Name",
                       controller: nameController),
-                  PhoneNumberInput(setPhoneNumber: setPhoneNumber),
+                  PhoneNumberInput(
+                    setPhoneNumber: setPhoneNumber,
+                    initialValue: userData["phoneNumber"] != ""
+                        ? userData["phoneNumber"]
+                        : "",
+                  ),
                   TextEdit(
                       labelText: "NRIC / Passport No",
                       hintText: "NRIC / Passport No",
