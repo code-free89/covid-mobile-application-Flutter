@@ -2,6 +2,7 @@ import 'package:covid/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:email_validator/email_validator.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -43,6 +44,7 @@ class _LogInState extends State<LogIn> {
                           selectorConfig: SelectorConfig(
                             selectorType: PhoneInputSelectorType.DIALOG,
                             trailingSpace: false,
+                            showFlags: false,
                           ),
                           maxLength: 10,
                           ignoreBlank: false,
@@ -60,7 +62,6 @@ class _LogInState extends State<LogIn> {
                             focusColor: Colors.black12,
                             fillColor: Colors.black12,
                             hoverColor: Colors.black12,
-                            labelText: "Mobile Number",
                           ),
                           hintText: "Mobile Number",
                           onSaved: (PhoneNumber number) {
@@ -109,7 +110,7 @@ class _LogInState extends State<LogIn> {
                     children: [
                       GestureDetector(
                         child: Text(
-                          "Login with email",
+                          "Login with ${this._logInMode == LogInMode.email ? "phone number" : "email"}",
                           style: AppStyles.normalText,
                         ),
                         onTap: () {

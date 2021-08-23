@@ -37,6 +37,10 @@ class _VerificationState extends State<Verification> {
     );
   }
 
+  void onSubmit() {
+    Navigator.popAndPushNamed(context, "/setupProfile1");
+  }
+
   @override
   void initState() {
     super.initState();
@@ -100,6 +104,8 @@ class _VerificationState extends State<Verification> {
                   TextFormField(
                     controller: otpController,
                     keyboardType: TextInputType.emailAddress,
+                    textAlign: TextAlign.center,
+                    maxLength: 6,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       contentPadding:
@@ -146,7 +152,7 @@ class _VerificationState extends State<Verification> {
                         40,
                       ), // double.infinity is the width and 30 is the height
                     ),
-                    onPressed: () {},
+                    onPressed: onSubmit,
                   ),
                 ],
               )

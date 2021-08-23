@@ -1,0 +1,111 @@
+import 'package:covid/components/button.dart';
+import 'package:covid/components/dropdown.dart';
+import 'package:covid/components/phone.dart';
+import 'package:covid/components/textbox.dart';
+import 'package:covid/components/textedit.dart';
+import 'package:flutter/material.dart';
+
+class SetupProfile2 extends StatefulWidget {
+  const SetupProfile2({Key? key}) : super(key: key);
+
+  @override
+  _SetupProfile2State createState() => _SetupProfile2State();
+}
+
+class _SetupProfile2State extends State<SetupProfile2> {
+  TextEditingController addressController = new TextEditingController();
+  TextEditingController postCodeController = new TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 60,
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        leading: GestureDetector(
+          child: Center(
+            child: Icon(
+              Icons.keyboard_arrow_left,
+              color: Colors.blue,
+              size: 40,
+            ),
+          ),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height - 20,
+          padding: EdgeInsets.only(left: 25, right: 25, top: 0, bottom: 15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  width: MediaQuery.of(context).size.width / 2 - 20,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextBox(
+                    value: "Step 2 of 3",
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                    padding: 10,
+                  ),
+                  TextBox(
+                    value: "Update your personal details",
+                    fontSize: 14,
+                    fontColor: Colors.black45,
+                    padding: 10,
+                  ),
+                  TextBox(
+                    value: "All fields are mandatory.",
+                    fontSize: 14,
+                    fontColor: Colors.black45,
+                    fontStyle: FontStyle.italic,
+                    padding: 10,
+                  ),
+                  DropDown(
+                    items: ["Male", "Female"],
+                    padding: 20,
+                  ),
+                  DropDown(
+                    items: ["Ethnicity", "Female"],
+                  ),
+                  TextEdit(
+                    hintText: "Current Address",
+                    controller: addressController,
+                  ),
+                  TextEdit(
+                    hintText: "Postcode",
+                    controller: postCodeController,
+                    type: "number",
+                    padding: 20,
+                  ),
+                  DropDown(
+                    items: ["State", "Female"],
+                    padding: 20,
+                  ),
+                  Button(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/setupProfile3");
+                    },
+                    label: "Next",
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
