@@ -1,9 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:covid/providers/authProvider.dart';
+import 'package:covid/services/database.dart';
 import 'package:covid/utils/enums.dart';
+import 'package:covid/utils/functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -16,38 +23,61 @@ class _RegisterState extends State<Register> {
   LogInMode _logInMode = LogInMode.phone;
   String phoneNumber = "";
 
-  void showToast(String msg) {
-    Fluttertoast.showToast(
-      msg: msg,
-      toastLength: Toast.LENGTH_LONG,
-      timeInSecForIosWeb: 2,
-      fontSize: 15,
-      gravity: ToastGravity.CENTER,
-      backgroundColor: Colors.lightBlue,
-      textColor: Colors.blue,
-    );
-  }
-
-  void registerUser() async {
-    if (_logInMode == LogInMode.phone) {
-      try {
-        PhoneNumber number =
-            await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber);
-        int countryCodeLength = number.dialCode?.length ?? 0;
-        if (phoneNumber.length - countryCodeLength < 11)
-          showToast("Invalid phone number");
-        else {
-          Navigator.pushNamed(context, "/verification");
-        }
-      } catch (e) {
-        showToast("Invalid phone number");
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     TextEditingController emailController = new TextEditingController();
+
+    void registerUser() async {
+      if (_logInMode == LogInMode.phone) {
+        try {
+          PhoneNumber number =
+              await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber);
+          int countryCodeLength = number.dialCode?.length ?? 0;
+          // if (phoneNumber.length - countryCodeLength < 11)
+          //   showToast("Invalid phone number");
+          // else {
+          // Navigator.pushNamed(context, "/verification");
+          await FirebaseAuth.instance.verifyPhoneNumber(
+            phoneNumber: phoneNumber,
+            verificationCompleted: (user) {
+              print(user);
+            },
+            verificationFailed: (e) {
+              print(e);
+            },
+            codeSent: (String verificationId, int? resendToken) {},
+            codeAutoRetrievalTimeout: (String verificationId) {},
+          );
+          // }
+        } catch (e) {
+          showToast("Invalid phone number");
+          print(e);
+        }
+      } else if (_logInMode == LogInMode.email) {
+        try {
+          final String email = emailController.text;
+          if (!EmailValidator.validate(email)) showToast("Invalid email");
+          UserCredential user =
+              await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: "123456",
+          );
+          var userData = Provider.of<AuthProvider>(context, listen: false)
+              .userData
+              .toJson();
+          Provider.of<AuthProvider>(context, listen: false).user = user.user!;
+          userData["email"] = email;
+          Provider.of<AuthProvider>(context, listen: false)
+              .userData
+              .fromJson(userData);
+          await user.user!.sendEmailVerification();
+          Navigator.pushNamed(context, "/setupProfile1");
+        } catch (e) {
+          print(e);
+        }
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 60,
@@ -91,8 +121,9 @@ class _RegisterState extends State<Register> {
                           selectorConfig: SelectorConfig(
                             selectorType: PhoneInputSelectorType.DIALOG,
                             trailingSpace: false,
+                            showFlags: false,
                           ),
-                          maxLength: 10,
+                          maxLength: 15,
                           ignoreBlank: false,
                           autoValidateMode: AutovalidateMode.disabled,
                           selectorTextStyle: TextStyle(color: Colors.black),
@@ -106,7 +137,6 @@ class _RegisterState extends State<Register> {
                             focusColor: Colors.black12,
                             fillColor: Colors.black12,
                             hoverColor: Colors.black12,
-                            labelText: "Mobile Number",
                           ),
                           hintText: "Mobile Number",
                         )
@@ -114,7 +144,6 @@ class _RegisterState extends State<Register> {
                           controller: emailController,
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
-                            labelText: "Email",
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 0),
