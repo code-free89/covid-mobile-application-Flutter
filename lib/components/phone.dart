@@ -1,9 +1,12 @@
+import 'package:covid/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class PhoneNumberInput extends StatefulWidget {
   final Function setPhoneNumber;
-  const PhoneNumberInput({required this.setPhoneNumber, Key? key})
+  final String initialValue;
+  const PhoneNumberInput(
+      {required this.setPhoneNumber, this.initialValue = "", Key? key})
       : super(key: key);
 
   @override
@@ -24,7 +27,8 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
           trailingSpace: false,
           showFlags: false,
         ),
-        maxLength: 10,
+        initialValue: PhoneNumber(phoneNumber: widget.initialValue),
+        maxLength: 15,
         ignoreBlank: false,
         autoValidateMode: AutovalidateMode.disabled,
         selectorTextStyle: TextStyle(color: Colors.black),

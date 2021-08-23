@@ -62,14 +62,10 @@ class _RegisterState extends State<Register> {
             email: email,
             password: "123456",
           );
-          var userData = Provider.of<AuthProvider>(context, listen: false)
-              .userData
-              .toJson();
+          var userData = getUserData(context);
           Provider.of<AuthProvider>(context, listen: false).user = user.user!;
           userData["email"] = email;
-          Provider.of<AuthProvider>(context, listen: false)
-              .userData
-              .fromJson(userData);
+          setUserData(context, userData);
           await user.user!.sendEmailVerification();
           Navigator.pushNamed(context, "/setupProfile1");
         } catch (e) {

@@ -2,6 +2,7 @@ import 'package:covid/components/button.dart';
 import 'package:covid/components/phone.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/components/textedit.dart';
+import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -25,7 +26,36 @@ class _SetupProfile1State extends State<SetupProfile1> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var userData = getUserData(context);
+    setState(() {
+      emailController.value = new TextEditingValue(text: userData["email"]);
+    });
+
+    void onSubmit() {
+      try {
+        if (nameController.value.text == "" ||
+            passportController.value.text == "" ||
+            ageController.text == "" ||
+            phoneNumber == "")
+          showToast("Please input all data");
+        else {
+          userData["name"] = nameController.value.text;
+          userData["passportNo"] = passportController.value.text;
+          userData["age"] = int.parse(ageController.value.text);
+          setUserData(context, userData);
+          Navigator.pushNamed(context, "/setupProfile2");
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -66,9 +96,11 @@ class _SetupProfile1State extends State<SetupProfile1> {
                     padding: 10,
                   ),
                   TextEdit(
-                      labelText: "Email",
-                      hintText: "Email",
-                      controller: emailController),
+                    labelText: "Email",
+                    hintText: "Email",
+                    controller: emailController,
+                    readOnly: emailController.value.text != "" ? true : false,
+                  ),
                   TextEdit(
                       labelText: "Full Name",
                       hintText: "Full Name",
@@ -87,7 +119,7 @@ class _SetupProfile1State extends State<SetupProfile1> {
                   ),
                   Button(
                     onPressed: () {
-                      Navigator.pushNamed(context, "/setupProfile2");
+                      onSubmit();
                     },
                     label: "Next",
                   ),

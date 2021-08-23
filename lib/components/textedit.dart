@@ -8,12 +8,14 @@ class TextEdit extends StatefulWidget {
   final String hintText;
   final String type;
   final double padding;
+  final bool readOnly;
   const TextEdit(
       {this.labelText = "",
       this.hintText = "",
       required this.controller,
       this.type = "string",
       this.padding = 10,
+      this.readOnly = false,
       Key? key})
       : super(key: key);
 
@@ -41,7 +43,9 @@ class _TextEditState extends State<TextEdit> {
         ),
         style: TextStyle(
           fontSize: 15,
+          color: widget.readOnly ? Colors.black45 : Colors.black,
         ),
+        readOnly: widget.readOnly,
       ),
     );
   }

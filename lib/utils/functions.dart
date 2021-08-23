@@ -1,6 +1,8 @@
+import 'package:covid/providers/authProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mailer/mailer.dart';
+import 'package:provider/provider.dart';
 
 void showToast(String msg) {
   Fluttertoast.showToast(
@@ -24,4 +26,14 @@ void showAlert({String title = ""}) {
         borderRadius: BorderRadius.all(Radius.circular(20))),
     content: Text("Save successfully"),
   );
+}
+
+Map<String, dynamic> getUserData(BuildContext context) {
+  return Provider.of<AuthProvider>(context, listen: false).userData.toJson();
+}
+
+void setUserData(BuildContext context, Map<String, dynamic> value) {
+  return Provider.of<AuthProvider>(context, listen: false)
+      .userData
+      .fromJson(value);
 }

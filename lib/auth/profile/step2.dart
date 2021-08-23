@@ -1,8 +1,8 @@
 import 'package:covid/components/button.dart';
 import 'package:covid/components/dropdown.dart';
-import 'package:covid/components/phone.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/components/textedit.dart';
+import 'package:covid/utils/functions.dart';
 import 'package:flutter/material.dart';
 
 class SetupProfile2 extends StatefulWidget {
@@ -17,6 +17,34 @@ class _SetupProfile2State extends State<SetupProfile2> {
   TextEditingController postCodeController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
+    var userData = getUserData(context);
+    userData["gender"] = "male";
+    userData["ethnity"] = "Malay";
+    userData["state"] = "Johor";
+    void onChangeGender(String gender) {
+      userData["gender"] = gender;
+    }
+
+    void onChangeEthnity(String ethnity) {
+      userData["ethnity"] = ethnity;
+    }
+
+    void onChangeState(String state) {
+      userData["state"] = state;
+    }
+
+    void onSubmit() {
+      if (addressController.value.text == "" ||
+          postCodeController.value.text == "") {
+        showToast("Please input all data");
+      } else {
+        userData["address"] = addressController.value.text;
+        userData["postcode"] = postCodeController.value.text;
+        setUserData(context, userData);
+        Navigator.pushNamed(context, "/setupProfile3");
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 60,
@@ -76,9 +104,19 @@ class _SetupProfile2State extends State<SetupProfile2> {
                   DropDown(
                     items: ["Male", "Female"],
                     padding: 20,
+                    onChange: onChangeGender,
                   ),
                   DropDown(
-                    items: ["Ethnicity", "Female"],
+                    items: [
+                      "Malay",
+                      "Chinese",
+                      "Indian",
+                      "Bumiputera Sabah",
+                      "Bumiputera Sarawak",
+                      "Orang Asli",
+                      "Others"
+                    ],
+                    onChange: onChangeEthnity,
                   ),
                   TextEdit(
                     hintText: "Current Address",
@@ -91,12 +129,30 @@ class _SetupProfile2State extends State<SetupProfile2> {
                     padding: 20,
                   ),
                   DropDown(
-                    items: ["State", "Female"],
+                    items: [
+                      "Johor",
+                      "Kedah",
+                      "Kelantan",
+                      "Melaka",
+                      "Negeri Sembilan",
+                      "Pahang",
+                      "Perak",
+                      "Perlis",
+                      "Pulau Pinang",
+                      "Sabah",
+                      "Sarawak",
+                      "Selangor",
+                      "Terengganu",
+                      "WP Kuala Lumpur",
+                      "WP Labuan",
+                      "WP Putrajaya",
+                    ],
                     padding: 20,
+                    onChange: onChangeState,
                   ),
                   Button(
                     onPressed: () {
-                      Navigator.pushNamed(context, "/setupProfile3");
+                      onSubmit();
                     },
                     label: "Next",
                   ),

@@ -4,8 +4,13 @@ class DropDown extends StatefulWidget {
   final String hintText;
   final List<String> items;
   final double padding;
+  final Function onChange;
   const DropDown(
-      {this.hintText = "", this.padding = 10, required this.items, Key? key})
+      {this.hintText = "",
+      this.padding = 10,
+      required this.items,
+      required this.onChange,
+      Key? key})
       : super(key: key);
 
   @override
@@ -14,11 +19,15 @@ class DropDown extends StatefulWidget {
 
 class _DropDownState extends State<DropDown> {
   String currentSelectedValue = "";
+
+  @override
+  void initState() {
+    currentSelectedValue = widget.items[0];
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      currentSelectedValue = widget.items[0];
-    });
     return Container(
       padding: EdgeInsets.only(bottom: widget.padding),
       child: FormField<String>(
@@ -41,6 +50,7 @@ class _DropDownState extends State<DropDown> {
                   setState(() {
                     currentSelectedValue = newValue!;
                   });
+                  widget.onChange(newValue);
                 },
                 items: widget.items.map((String value) {
                   return DropdownMenuItem<String>(

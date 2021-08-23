@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid/components/button.dart';
 import 'package:covid/components/password.dart';
 import 'package:covid/components/textbox.dart';
+import 'package:covid/utils/functions.dart';
 import 'package:flutter/material.dart';
 
 class SetupProfile3 extends StatefulWidget {
@@ -13,8 +15,32 @@ class SetupProfile3 extends StatefulWidget {
 class _SetupProfile3State extends State<SetupProfile3> {
   TextEditingController passwordController = new TextEditingController();
   TextEditingController confirmController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    var userData = getUserData(context);
+    void onSubmit() async {
+      if (passwordController.value.text == "" ||
+          confirmController.value.text == "")
+        showToast("Plase input all data");
+      else if (passwordController.value.text != confirmController.value.text)
+        showToast("Confirm password isn't the same");
+      else {
+        try {
+          userData["password"] = passwordController.value.text;
+          setUserData(context, userData);
+          print(userData);
+
+          CollectionReference<Map<String, dynamic>> usercollection =
+              FirebaseFirestore.instance.collection("users");
+          await usercollection.add(userData);
+          Navigator.pushNamed(context, "/profileSuccess");
+        } catch (e) {
+          print(e);
+        }
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 60,
@@ -95,7 +121,7 @@ class _SetupProfile3State extends State<SetupProfile3> {
                   ),
                   Button(
                     onPressed: () {
-                      Navigator.pushNamed(context, "/profileSuccess");
+                      onSubmit();
                     },
                     label: "Confirm",
                   ),
