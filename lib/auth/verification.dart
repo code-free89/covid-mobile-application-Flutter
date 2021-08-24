@@ -94,15 +94,21 @@ class _VerificationState extends State<Verification> {
           PhoneAuthCredential _credential = PhoneAuthProvider.credential(
               verificationId: verificationId,
               smsCode: otpController.value.text);
-          await FirebaseAuth.instance.signInWithCredential(_credential);
-          var userData = getUserData(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  SetupProfile1(phone: userData["phoneNumber"]),
-            ),
-          );
+          UserCredential user =
+              await FirebaseAuth.instance.signInWithCredential(_credential);
+          if (user.additionalUserInfo!.isNewUser) {
+            var userData = getUserData(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    SetupProfile1(phone: userData["phoneNumber"]),
+              ),
+            );
+          } else {
+            showToast("This phone number is already registered");
+            Navigator.pop(context);
+          }
         } catch (e) {
           print(e);
           showToast("Invalid OTP code");
