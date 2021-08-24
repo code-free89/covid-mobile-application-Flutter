@@ -78,15 +78,22 @@ class _RegisterState extends State<Register> {
           print(e);
         }
       } else if (_logInMode == LogInMode.email) {
+        final String email = emailController.value.text;
+        if (email == "" || !EmailValidator.validate(email)) {
+          showToast("Invalid email");
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
         try {
-          final String email = emailController.value.text;
-          if (email == "" || !EmailValidator.validate(email)) {
-            showToast("Invalid email");
-            setState(() {
-              _isLoading = false;
-            });
-            return;
-          }
+          UserCredential user = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(email: email, password: "123456");
+          if (!user.user!.emailVerified) await user.user!.delete();
+        } catch (e) {
+          print(e);
+        }
+        try {
           UserCredential user =
               await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: email,

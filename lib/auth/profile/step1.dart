@@ -4,6 +4,7 @@ import 'package:covid/components/textbox.dart';
 import 'package:covid/components/textedit.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SetupProfile1 extends StatefulWidget {
@@ -38,7 +39,7 @@ class _SetupProfile1State extends State<SetupProfile1> {
 
   @override
   Widget build(BuildContext context) {
-    void onSubmit() {
+    void onSubmit() async {
       try {
         var userData = getUserData(context);
         if (nameController.value.text == "" ||
@@ -50,13 +51,14 @@ class _SetupProfile1State extends State<SetupProfile1> {
           userData["name"] = nameController.value.text;
           userData["passportNo"] = passportController.value.text;
           userData["age"] = int.parse(ageController.value.text);
-          if (userData["email"] != "")
+          if (userData["email"] != "") {
             userData["phoneNumber"] = phoneNumber;
-          else if (!EmailValidator.validate(emailController.value.text)) {
+          } else if (!EmailValidator.validate(emailController.value.text)) {
             showToast("Invalid email address");
             return;
-          } else
+          } else {
             userData["email"] = emailController.value.text;
+          }
           setUserData(context, userData);
           Navigator.pushNamed(context, "/setupProfile2");
         }

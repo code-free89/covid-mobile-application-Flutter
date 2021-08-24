@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class UserData {
   String email;
   String name;
-  String password;
   String phoneNumber;
   String passportNo;
   int age;
@@ -17,7 +16,6 @@ class UserData {
   UserData({
     this.email = "",
     this.name = "",
-    this.password = "",
     this.phoneNumber = "",
     this.passportNo = "",
     this.age = 0,
@@ -32,7 +30,6 @@ class UserData {
   void fromJson(Map<String, dynamic> json) {
     this.email = json["email"];
     this.name = json["name"];
-    this.password = json["password"];
     this.phoneNumber = json["phoneNumber"];
     this.passportNo = json["passportNo"];
     this.age = json["age"];
@@ -48,7 +45,6 @@ class UserData {
     return {
       "email": this.email,
       "name": this.name,
-      "password": this.password,
       "phoneNumber": this.phoneNumber,
       "passportNo": this.passportNo,
       "age": this.age,

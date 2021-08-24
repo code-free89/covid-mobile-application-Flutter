@@ -3,6 +3,7 @@ import 'package:covid/components/button.dart';
 import 'package:covid/components/password.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/utils/functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SetupProfile3 extends StatefulWidget {
@@ -27,9 +28,8 @@ class _SetupProfile3State extends State<SetupProfile3> {
         showToast("Confirm password isn't the same");
       else {
         try {
-          userData["password"] = passwordController.value.text;
-          setUserData(context, userData);
-          print(userData);
+          await FirebaseAuth.instance.currentUser!
+              .updatePassword(passwordController.value.text);
 
           CollectionReference<Map<String, dynamic>> usercollection =
               FirebaseFirestore.instance.collection("users");
