@@ -23,15 +23,29 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   LogInMode _logInMode = LogInMode.phone;
   String phoneNumber = "";
+  bool _isLoading = false;
+  TextEditingController emailController = new TextEditingController();
+
+  @override
+  void initState() {
+    // setState(() {
+    //   _isLoading = false;
+    // });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailController = new TextEditingController();
-
+    setState(() {
+      _isLoading = false;
+    });
     void registerUser() async {
       var userData = getUserData(context);
       userData["email"] = "";
       userData["phoneNumber"] = "";
+      setState(() {
+        _isLoading = true;
+      });
       if (_logInMode == LogInMode.phone) {
         try {
           if (phoneNumber.length > 5) {
@@ -40,7 +54,9 @@ class _RegisterState extends State<Register> {
               verificationCompleted: (PhoneAuthCredential user) {
                 print("phone auth completed");
               },
-              verificationFailed: (e) {},
+              verificationFailed: (e) {
+                showToast("Invalid phone number");
+              },
               codeSent: (String verificationId, int? resendToken) {
                 userData["phoneNumber"] = phoneNumber;
                 setUserData(context, userData);
@@ -63,8 +79,14 @@ class _RegisterState extends State<Register> {
         }
       } else if (_logInMode == LogInMode.email) {
         try {
-          final String email = emailController.text;
-          if (!EmailValidator.validate(email)) showToast("Invalid email");
+          final String email = emailController.value.text;
+          if (email == "" || !EmailValidator.validate(email)) {
+            showToast("Invalid email");
+            setState(() {
+              _isLoading = false;
+            });
+            return;
+          }
           UserCredential user =
               await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: email,
@@ -83,118 +105,144 @@ class _RegisterState extends State<Register> {
           print(e);
         }
       }
+      setState(() {
+        _isLoading = false;
+      });
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 60,
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        leading: GestureDetector(
-          child: Center(
-            child: Icon(
-              Icons.keyboard_arrow_left,
-              color: Colors.blue,
-              size: 40,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 60,
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            leading: GestureDetector(
+              child: Center(
+                child: Icon(
+                  Icons.keyboard_arrow_left,
+                  color: Colors.blue,
+                  size: 40,
+                ),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
             ),
           ),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height - 90,
-          padding: EdgeInsets.only(top: 80, left: 25, bottom: 50, right: 25),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.asset(
-                'assets/images/logo.png',
-                width: MediaQuery.of(context).size.width / 2 - 20,
-                fit: BoxFit.fitWidth,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          body: SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height - 90,
+              padding:
+                  EdgeInsets.only(top: 80, left: 25, bottom: 50, right: 25),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Registration", style: AppStyles.titleText),
-                  SizedBox(height: 20),
-                  _logInMode == LogInMode.phone
-                      ? InternationalPhoneNumberInput(
-                          onInputChanged: (PhoneNumber number) {
-                            phoneNumber = number.phoneNumber ?? "";
-                          },
-                          selectorConfig: SelectorConfig(
-                            selectorType: PhoneInputSelectorType.DIALOG,
-                            trailingSpace: false,
-                            showFlags: false,
-                          ),
-                          maxLength: 15,
-                          ignoreBlank: false,
-                          autoValidateMode: AutovalidateMode.disabled,
-                          selectorTextStyle: TextStyle(color: Colors.black),
-                          formatInput: true,
-                          keyboardType: TextInputType.numberWithOptions(
-                              signed: true, decimal: true),
-                          inputDecoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 0),
-                            focusColor: Colors.black12,
-                            fillColor: Colors.black12,
-                            hoverColor: Colors.black12,
-                            labelText: "Mobile Number",
-                          ),
-                          hintText: "Mobile Number",
-                        )
-                      : TextFormField(
-                          controller: emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 0),
-                            hintText: "Email",
+                  Image.asset(
+                    'assets/images/logo.png',
+                    width: MediaQuery.of(context).size.width / 2 - 20,
+                    fit: BoxFit.fitWidth,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Registration", style: AppStyles.titleText),
+                      SizedBox(height: 20),
+                      _logInMode == LogInMode.phone
+                          ? InternationalPhoneNumberInput(
+                              onInputChanged: (PhoneNumber number) {
+                                phoneNumber = number.phoneNumber ?? "";
+                              },
+                              selectorConfig: SelectorConfig(
+                                selectorType: PhoneInputSelectorType.DIALOG,
+                                trailingSpace: false,
+                                showFlags: false,
+                              ),
+                              maxLength: 15,
+                              ignoreBlank: false,
+                              autoValidateMode: AutovalidateMode.disabled,
+                              selectorTextStyle: TextStyle(color: Colors.black),
+                              formatInput: true,
+                              keyboardType: TextInputType.numberWithOptions(
+                                  signed: true, decimal: true),
+                              inputDecoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 0),
+                                focusColor: Colors.black12,
+                                fillColor: Colors.black12,
+                                hoverColor: Colors.black12,
+                                labelText: "Mobile Number",
+                              ),
+                              hintText: "Mobile Number",
+                            )
+                          : TextFormField(
+                              controller: emailController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 10),
+                                hintText: "Email",
+                              ),
+                            ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      ElevatedButton(
+                        child: Text("Register"),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(
+                            double.infinity,
+                            40,
+                          ), // double.infinity is the width and 30 is the height
+                        ),
+                        onPressed: () => registerUser(),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      GestureDetector(
+                        child: Center(
+                          child: Text(
+                            "I would like to use ${this._logInMode == LogInMode.phone ? "email" : "phone number"} to register",
+                            style: AppStyles.defaultText,
                           ),
                         ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  ElevatedButton(
-                    child: Text("Register"),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(
-                        double.infinity,
-                        40,
-                      ), // double.infinity is the width and 30 is the height
-                    ),
-                    onPressed: () => registerUser(),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  GestureDetector(
-                    child: Center(
-                      child: Text(
-                        "I would like to use ${this._logInMode == LogInMode.phone ? "email" : "phone number"} to register",
-                        style: AppStyles.defaultText,
+                        onTap: () {
+                          setState(() {
+                            _logInMode = _logInMode == LogInMode.phone
+                                ? LogInMode.email
+                                : LogInMode.phone;
+                          });
+                        },
                       ),
-                    ),
-                    onTap: () {
-                      setState(() {
-                        _logInMode = _logInMode == LogInMode.phone
-                            ? LogInMode.email
-                            : LogInMode.phone;
-                      });
-                    },
-                  ),
+                    ],
+                  )
                 ],
-              )
-            ],
+              ),
+            ),
           ),
         ),
-      ),
+        _isLoading
+            ? Container(
+                child: GestureDetector(
+                  child: Opacity(
+                    opacity: 0.5,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                      ),
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : Container(),
+      ],
     );
   }
 }

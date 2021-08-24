@@ -7,7 +7,10 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 class SetupProfile1 extends StatefulWidget {
-  const SetupProfile1({Key? key}) : super(key: key);
+  final String phone;
+  final String email;
+  const SetupProfile1({this.phone = "", this.email = "", Key? key})
+      : super(key: key);
 
   @override
   _SetupProfile1State createState() => _SetupProfile1State();
@@ -26,25 +29,18 @@ class _SetupProfile1State extends State<SetupProfile1> {
 
   @override
   void initState() {
+    if (widget.email != "")
+      setState(() {
+        emailController = new TextEditingController(text: widget.email);
+      });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var userData = getUserData(context);
-    if (userData["email"] != "") {
-      setState(() {
-        emailController.value = new TextEditingValue(text: userData["email"]);
-      });
-    }
-    if (userData["phoneNumber"] != "") {
-      setState(() {
-        phoneNumber = userData["phoneNumber"];
-      });
-    }
-
     void onSubmit() {
       try {
+        var userData = getUserData(context);
         if (nameController.value.text == "" ||
             passportController.value.text == "" ||
             ageController.text == "" ||
@@ -112,7 +108,7 @@ class _SetupProfile1State extends State<SetupProfile1> {
                     labelText: "Email",
                     hintText: "Email",
                     controller: emailController,
-                    readOnly: emailController.value.text != "" ? true : false,
+                    readOnly: widget.email != "" ? true : false,
                   ),
                   TextEdit(
                       labelText: "Full Name",
@@ -120,13 +116,12 @@ class _SetupProfile1State extends State<SetupProfile1> {
                       controller: nameController),
                   PhoneNumberInput(
                     setPhoneNumber: setPhoneNumber,
-                    initialValue: userData["phoneNumber"] != ""
-                        ? userData["phoneNumber"]
-                        : "",
+                    initialValue: widget.phone != "" ? widget.phone : "",
                   ),
                   TextEdit(
                       labelText: "NRIC / Passport No",
                       hintText: "NRIC / Passport No",
+                      type: "number",
                       controller: passportController),
                   TextEdit(
                     labelText: "Age",

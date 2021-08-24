@@ -17,11 +17,15 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
   String isoCode = "";
   PhoneNumber initialNumber = PhoneNumber();
   void getPhoneNumberInfo() async {
-    PhoneNumber number =
-        await PhoneNumber.getRegionInfoFromPhoneNumber(widget.initialValue);
-    setState(() {
-      initialNumber = number;
-    });
+    try {
+      PhoneNumber number =
+          await PhoneNumber.getRegionInfoFromPhoneNumber(widget.initialValue);
+      setState(() {
+        initialNumber = number;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

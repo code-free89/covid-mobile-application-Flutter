@@ -1,3 +1,4 @@
+import 'package:covid/auth/profile/step1.dart';
 import 'package:covid/components/button.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/utils/functions.dart';
@@ -15,12 +16,19 @@ class _EmailVerificationState extends State<EmailVerification> {
   @override
   Widget build(BuildContext context) {
     void onSubmit() async {
-      User user = FirebaseAuth.instance.currentUser!;
-      print(user);
+      var userData = getUserData(context);
+      var _authenticatedUser = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: userData["email"], password: "123456");
       // ignore: unnecessary_null_comparison
-      if (user == null) return;
-      if (user.emailVerified) {
-        Navigator.pushNamed(context, "/setupProfile1");
+      if (_authenticatedUser == null) return;
+      if (_authenticatedUser.user!.emailVerified) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SetupProfile1(email: userData["email"]),
+          ),
+        );
       } else {
         showToast("Please check your email for verification");
       }

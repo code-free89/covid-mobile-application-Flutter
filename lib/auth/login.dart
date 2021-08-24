@@ -15,11 +15,11 @@ class _LogInState extends State<LogIn> {
   bool _isObscure = true;
   LogInMode _logInMode = LogInMode.phone;
   String phoneNumber = "";
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailController = new TextEditingController();
-    TextEditingController passwordController = new TextEditingController();
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:covid/auth/profile/step1.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/components/textedit.dart';
 import 'package:covid/utils/functions.dart';
@@ -44,22 +45,6 @@ class _VerificationState extends State<Verification> {
     );
   }
 
-  void onSubmit() async {
-    if (duration == 0) {
-      showToast("Your OTP code is expired");
-    } else {
-      try {
-        PhoneAuthCredential _credential = PhoneAuthProvider.credential(
-            verificationId: verificationId, smsCode: otpController.value.text);
-        await FirebaseAuth.instance.signInWithCredential(_credential);
-        Navigator.popAndPushNamed(context, "/setupProfile1");
-      } catch (e) {
-        print(e);
-        showToast("Invalid OTP code");
-      }
-    }
-  }
-
   void resendOTP() async {
     if (duration != 0) return;
     try {
@@ -101,6 +86,30 @@ class _VerificationState extends State<Verification> {
 
   @override
   Widget build(BuildContext context) {
+    void onSubmit() async {
+      if (duration == 0) {
+        showToast("Your OTP code is expired");
+      } else {
+        try {
+          PhoneAuthCredential _credential = PhoneAuthProvider.credential(
+              verificationId: verificationId,
+              smsCode: otpController.value.text);
+          await FirebaseAuth.instance.signInWithCredential(_credential);
+          var userData = getUserData(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  SetupProfile1(phone: userData["phoneNumber"]),
+            ),
+          );
+        } catch (e) {
+          print(e);
+          showToast("Invalid OTP code");
+        }
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 60,
