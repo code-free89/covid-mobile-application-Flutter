@@ -1,3 +1,5 @@
+import 'package:covid/auth/email_verification.dart';
+import 'package:covid/auth/verification.dart';
 import 'package:covid/components/button.dart';
 import 'package:covid/components/phone.dart';
 import 'package:covid/components/textbox.dart';
@@ -10,7 +12,9 @@ import 'package:flutter/material.dart';
 class SetupProfile1 extends StatefulWidget {
   final String phone;
   final String email;
-  const SetupProfile1({this.phone = "", this.email = "", Key? key})
+  final String setupType;
+  const SetupProfile1(
+      {this.phone = "", this.email = "", required this.setupType, Key? key})
       : super(key: key);
 
   @override
@@ -32,6 +36,7 @@ class _SetupProfile1State extends State<SetupProfile1> {
   void initState() {
     if (widget.email != "")
       setState(() {
+        phoneNumber = widget.phone;
         emailController = new TextEditingController(text: widget.email);
       });
     super.initState();
@@ -51,16 +56,68 @@ class _SetupProfile1State extends State<SetupProfile1> {
           userData["name"] = nameController.value.text;
           userData["passportNo"] = passportController.value.text;
           userData["age"] = int.parse(ageController.value.text);
-          if (userData["email"] != "") {
-            userData["phoneNumber"] = phoneNumber;
-          } else if (!EmailValidator.validate(emailController.value.text)) {
+          User? user = FirebaseAuth.instance.currentUser;
+          print(user);
+
+          // All conditions are true
+          if (user!.emailVerified &&
+              user.phoneNumber != "" &&
+              user.phoneNumber != null) {
+            Navigator.pushNamed(context, "/setupProfile2");
+            return;
+          }
+
+          if (!EmailValidator.validate(emailController.value.text)) {
             showToast("Invalid email address");
             return;
+          }
+          if (phoneNumber.length < 5) {
+            showToast("Please input phone number");
+            return;
+          }
+          // setupProfile by email
+          if (widget.setupType == "email") {
+            userData["phoneNumber"] = phoneNumber;
+            await FirebaseAuth.instance.verifyPhoneNumber(
+              phoneNumber: phoneNumber,
+              verificationCompleted: (PhoneAuthCredential user) {
+                print("phone auth completed");
+              },
+              verificationFailed: (e) {
+                showToast("Invalid phone number");
+              },
+              codeSent: (String verificationId, int? resendToken) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Verification(
+                      verificationId: verificationId,
+                      verifyType: "verify",
+                    ),
+                  ),
+                );
+              },
+              codeAutoRetrievalTimeout: (String verificationId) {},
+            );
           } else {
-            userData["email"] = emailController.value.text;
+            // setupProfile by phone number
+            try {
+              await user.updateEmail(emailController.value.text);
+              await user.updatePassword("123456");
+              await user.sendEmailVerification();
+              userData["email"] = emailController.value.text;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EmailVerification(verifyType: "verify"),
+                ),
+              );
+            } catch (e) {
+              showToast("Email already exist");
+              print(e);
+            }
           }
           setUserData(context, userData);
-          Navigator.pushNamed(context, "/setupProfile2");
         }
       } catch (e) {
         print(e);

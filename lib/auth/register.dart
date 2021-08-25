@@ -1,14 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:covid/auth/email_verification.dart';
 import 'package:covid/auth/verification.dart';
 import 'package:covid/providers/authProvider.dart';
-import 'package:covid/services/database.dart';
 import 'package:covid/utils/enums.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:covid/utils/styles.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:provider/provider.dart';
@@ -63,8 +60,10 @@ class _RegisterState extends State<Register> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        Verification(verificationId: verificationId),
+                    builder: (context) => Verification(
+                      verificationId: verificationId,
+                      verifyType: "register",
+                    ),
                   ),
                 );
               },
@@ -104,7 +103,14 @@ class _RegisterState extends State<Register> {
           userData["email"] = email;
           setUserData(context, userData);
           await user.user!.sendEmailVerification();
-          Navigator.pushNamed(context, "/verification");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EmailVerification(
+                verifyType: "register",
+              ),
+            ),
+          );
         } catch (e) {
           if (e.toString().indexOf("already") >= 0) {
             showToast("Email is already exist.");

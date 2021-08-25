@@ -1,4 +1,7 @@
+import 'package:covid/auth/verification.dart';
 import 'package:covid/utils/enums.dart';
+import 'package:covid/utils/functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -17,6 +20,62 @@ class _LogInState extends State<LogIn> {
   String phoneNumber = "";
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
+
+  void signIn() async {
+    try {
+      if (_logInMode == LogInMode.email) {
+        final email = emailController.value.text;
+        final password = passwordController.value.text;
+        if (!EmailValidator.validate(email)) {
+          showToast("Invalid email");
+          return;
+        } else if (password == "") {
+          showToast("Please input password");
+          return;
+        } else {
+          UserCredential user = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(email: email, password: password);
+          print(user);
+          Navigator.pushNamed(context, "/home");
+        }
+      } else {
+        if (phoneNumber.length < 5) {
+          showToast("Please input phone number");
+          return;
+        } else {
+          try {
+            await FirebaseAuth.instance.verifyPhoneNumber(
+              phoneNumber: phoneNumber,
+              verificationCompleted: (PhoneAuthCredential user) {
+                print("phone auth completed");
+              },
+              verificationFailed: (e) {
+                showToast("Invalid phone number");
+              },
+              codeSent: (String verificationId, int? resendToken) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Verification(
+                      verificationId: verificationId,
+                      verifyType: "login",
+                    ),
+                  ),
+                );
+              },
+              codeAutoRetrievalTimeout: (String verificationId) {},
+            );
+          } catch (e) {
+            showToast("The phone number isn't registered");
+            print(e);
+          }
+        }
+      }
+    } catch (e) {
+      showToast("Unregistered username and password");
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,29 +137,33 @@ class _LogInState extends State<LogIn> {
                   SizedBox(
                     height: 8,
                   ),
-                  TextFormField(
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isObscure ? Icons.visibility : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isObscure = !_isObscure;
-                          });
-                        },
-                      ),
-                    ),
-                    validator: (val) =>
-                        val!.length < 6 ? 'Password too short.' : null,
-                    onSaved: (val) => print(val),
-                    obscureText: _isObscure,
-                  ),
+                  _logInMode == LogInMode.email
+                      ? TextFormField(
+                          controller: passwordController,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 0),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              },
+                            ),
+                          ),
+                          validator: (val) =>
+                              val!.length < 6 ? 'Password too short.' : null,
+                          onSaved: (val) => print(val),
+                          obscureText: _isObscure,
+                        )
+                      : Container(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -130,7 +193,9 @@ class _LogInState extends State<LogIn> {
                         40,
                       ), // double.infinity is the width and 30 is the height
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      signIn();
+                    },
                   ),
                   OutlinedButton(
                     onPressed: () {

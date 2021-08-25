@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 class Button extends StatefulWidget {
   final Function onPressed;
   final String label;
-  const Button({this.label = "", required this.onPressed, Key? key})
+  final double width;
+  const Button(
+      {this.label = "",
+      this.width = double.infinity,
+      required this.onPressed,
+      Key? key})
       : super(key: key);
 
   @override
@@ -18,7 +23,7 @@ class _ButtonState extends State<Button> {
         child: Text(widget.label),
         style: ElevatedButton.styleFrom(
           minimumSize: Size(
-            double.infinity,
+            widget.width,
             40,
           ), // double.infinity is the width and 30 is the height
         ),

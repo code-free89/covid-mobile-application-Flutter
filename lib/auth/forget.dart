@@ -1,5 +1,9 @@
+import 'package:covid/components/textbox.dart';
 import 'package:covid/utils/enums.dart';
+import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -15,6 +19,16 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   String phoneNumber = "";
+
+  void onSubmit() async {
+    final email = emailController.value.text;
+    if (!EmailValidator.validate(email)) {
+      showToast("Invalid email");
+      return;
+    }
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    showToast("Reset password link sent");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +65,19 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Reset password", style: AppStyles.titleText),
-                  Text("Registered user ID", style: AppStyles.descriptionText),
+                  TextBox(
+                    value: "Reset password",
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    fontColor: Colors.black,
+                    padding: 20,
+                  ),
+                  TextBox(
+                    value: "Registered user ID",
+                    fontSize: 15,
+                    fontColor: Colors.black45,
+                    padding: 10,
+                  ),
                   _logInMode == LogInMode.phone
                       ? InternationalPhoneNumberInput(
                           onInputChanged: (PhoneNumber number) {
@@ -61,6 +86,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                           selectorConfig: SelectorConfig(
                             selectorType: PhoneInputSelectorType.DIALOG,
                             trailingSpace: false,
+                            showFlags: false,
                           ),
                           maxLength: 10,
                           ignoreBlank: false,
@@ -92,7 +118,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                           ),
                         ),
                   SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -125,7 +151,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         40,
                       ), // double.infinity is the width and 30 is the height
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      onSubmit();
+                    },
                   ),
                 ],
               )

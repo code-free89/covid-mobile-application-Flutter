@@ -21,8 +21,8 @@ class _SetupProfile3State extends State<SetupProfile3> {
   Widget build(BuildContext context) {
     var userData = getUserData(context);
     void onSubmit() async {
-      if (passwordController.value.text == "" ||
-          confirmController.value.text == "")
+      if (passwordController.value.text.length < 6 &&
+          passwordController.value.text.length > 25)
         showToast("Plase input all data");
       else if (passwordController.value.text != confirmController.value.text)
         showToast("Confirm password isn't the same");
@@ -34,6 +34,7 @@ class _SetupProfile3State extends State<SetupProfile3> {
           CollectionReference<Map<String, dynamic>> usercollection =
               FirebaseFirestore.instance.collection("users");
           await usercollection.add(userData);
+          FirebaseAuth.instance.signOut();
           Navigator.pushNamed(context, "/profileSuccess");
         } catch (e) {
           print(e);
@@ -113,7 +114,7 @@ class _SetupProfile3State extends State<SetupProfile3> {
                           height: 15,
                         ),
                         Text(
-                          "• Minimum 25 Characters",
+                          "• Maximum 25 Characters",
                           style: TextStyle(color: Colors.brown, fontSize: 12),
                         ),
                       ],

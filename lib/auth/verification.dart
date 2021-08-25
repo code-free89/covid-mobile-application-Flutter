@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 
 class Verification extends StatefulWidget {
   final String verificationId;
-  const Verification({required this.verificationId, Key? key})
+  final String verifyType;
+  const Verification(
+      {required this.verificationId, required this.verifyType, Key? key})
       : super(key: key);
 
   @override
@@ -96,18 +98,26 @@ class _VerificationState extends State<Verification> {
               smsCode: otpController.value.text);
           UserCredential user =
               await FirebaseAuth.instance.signInWithCredential(_credential);
+          print(user);
           if (user.additionalUserInfo!.isNewUser) {
             var userData = getUserData(context);
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    SetupProfile1(phone: userData["phoneNumber"]),
+                builder: (context) => SetupProfile1(
+                  phone: userData["phoneNumber"],
+                  setupType: "phone",
+                ),
               ),
             );
           } else {
-            showToast("This phone number is already registered");
-            Navigator.pop(context);
+            if (widget.verifyType == "register") {
+              showToast("This phone number is already registered");
+              Navigator.pop(context);
+            } else if (widget.verifyType == "login")
+              Navigator.pushNamed(context, "/home");
+            else
+              Navigator.pop(context);
           }
         } catch (e) {
           print(e);

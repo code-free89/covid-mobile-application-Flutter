@@ -12,6 +12,7 @@ class UserData {
   String postcode;
   String state;
   bool isVerified;
+  bool isFirstTimeLogin;
 
   UserData({
     this.email = "",
@@ -25,6 +26,7 @@ class UserData {
     this.postcode = "",
     this.state = "",
     this.isVerified = false,
+    this.isFirstTimeLogin = true,
   });
 
   void fromJson(Map<String, dynamic> json) {
@@ -39,6 +41,7 @@ class UserData {
     this.postcode = json["postcode"];
     this.state = json["state"];
     this.isVerified = json["isVerified"];
+    this.isFirstTimeLogin = json["isFirstTimeLogin"];
   }
 
   Map<String, dynamic> toJson() {
@@ -54,6 +57,7 @@ class UserData {
       "postcode": this.postcode,
       "state": this.state,
       "isVerified": this.isVerified,
+      "isFirstTimeLogin": this.isFirstTimeLogin,
     };
   }
 }

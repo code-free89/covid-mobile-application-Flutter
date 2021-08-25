@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppStyles {
+  static const Color primaryColor = Color(0xFF3883FF);
+
   static const defaultText = const TextStyle(
     decoration: TextDecoration.none,
     color: Colors.blue,

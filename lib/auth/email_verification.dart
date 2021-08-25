@@ -6,7 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class EmailVerification extends StatefulWidget {
-  const EmailVerification({Key? key}) : super(key: key);
+  final String verifyType;
+  const EmailVerification({required this.verifyType, Key? key})
+      : super(key: key);
 
   @override
   _EmailVerificationState createState() => _EmailVerificationState();
@@ -16,21 +18,31 @@ class _EmailVerificationState extends State<EmailVerification> {
   @override
   Widget build(BuildContext context) {
     void onSubmit() async {
-      var userData = getUserData(context);
-      var _authenticatedUser = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: userData["email"], password: "123456");
-      // ignore: unnecessary_null_comparison
-      if (_authenticatedUser == null) return;
-      if (_authenticatedUser.user!.emailVerified) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SetupProfile1(email: userData["email"]),
-          ),
-        );
-      } else {
-        showToast("Please check your email for verification");
+      try {
+        var userData = getUserData(context);
+        UserCredential user = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+                email: userData["email"], password: "123456");
+        print(user);
+        if (user.user!.emailVerified) {
+          if (widget.verifyType == "register")
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SetupProfile1(
+                  email: userData["email"],
+                  setupType: "email",
+                ),
+              ),
+            );
+          else if (widget.verifyType == "verify") {
+            Navigator.pop(context);
+          }
+        } else {
+          showToast("Please check your email for verification");
+        }
+      } catch (e) {
+        print(e);
       }
     }
 
