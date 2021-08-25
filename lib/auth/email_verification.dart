@@ -98,7 +98,7 @@ class _EmailVerificationState extends State<EmailVerification> {
                     onPressed: () {
                       onSubmit();
                     },
-                    label: "I already verified",
+                    label: "I have already verified",
                   ),
                   SizedBox(
                     height: 10,

@@ -4,6 +4,7 @@ import 'package:covid/providers/authProvider.dart';
 import 'package:covid/utils/enums.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -98,6 +99,7 @@ class _RegisterState extends State<Register> {
             email: email,
             password: "123456",
           );
+          setUser(context, user.user!);
           var userData = getUserData(context);
           Provider.of<AuthProvider>(context, listen: false).user = user.user!;
           userData["email"] = email;

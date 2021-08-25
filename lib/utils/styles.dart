@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppStyles {
   static const Color primaryColor = Color(0xFF3883FF);
+  static const Color lightGrayColor = Color(0x70DBDBDB);
 
   static const defaultText = const TextStyle(
     decoration: TextDecoration.none,

@@ -1,8 +1,12 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:covid/models/user.dart';
 import 'package:covid/pages/profile.dart';
+import 'package:covid/providers/authProvider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -22,8 +26,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // User? user = FirebaseAuth.instance.currentUser;
-    // print(user);
     super.initState();
   }
 

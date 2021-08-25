@@ -33,7 +33,7 @@ class _SetupProfile3State extends State<SetupProfile3> {
 
           CollectionReference<Map<String, dynamic>> usercollection =
               FirebaseFirestore.instance.collection("users");
-          await usercollection.add(userData);
+          await usercollection.doc(getUser(context).uid).set(userData);
           FirebaseAuth.instance.signOut();
           Navigator.pushNamed(context, "/profileSuccess");
         } catch (e) {

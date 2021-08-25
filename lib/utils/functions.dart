@@ -1,4 +1,5 @@
 import 'package:covid/providers/authProvider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mailer/mailer.dart';
@@ -33,7 +34,13 @@ Map<String, dynamic> getUserData(BuildContext context) {
 }
 
 void setUserData(BuildContext context, Map<String, dynamic> value) {
-  return Provider.of<AuthProvider>(context, listen: false)
-      .userData
-      .fromJson(value);
+  Provider.of<AuthProvider>(context, listen: false).userData.fromJson(value);
+}
+
+User getUser(BuildContext context) {
+  return Provider.of<AuthProvider>(context, listen: false).user;
+}
+
+void setUser(BuildContext context, User value) {
+  Provider.of<AuthProvider>(context, listen: false).user = value;
 }

@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid/auth/verification.dart';
+import 'package:covid/models/user.dart';
+import 'package:covid/providers/authProvider.dart';
 import 'package:covid/utils/enums.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:provider/provider.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -35,7 +39,16 @@ class _LogInState extends State<LogIn> {
         } else {
           UserCredential user = await FirebaseAuth.instance
               .signInWithEmailAndPassword(email: email, password: password);
-          print(user);
+          Provider.of<AuthProvider>(context, listen: false).user = user.user!;
+          setUserData(
+            context,
+            (await FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(user.user!.uid)
+                        .get())
+                    .data() ??
+                {},
+          );
           Navigator.pushNamed(context, "/home");
         }
       } else {
