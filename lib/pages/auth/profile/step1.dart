@@ -1,9 +1,9 @@
-import 'package:covid/auth/email_verification.dart';
-import 'package:covid/auth/verification.dart';
 import 'package:covid/components/button.dart';
 import 'package:covid/components/phone.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/components/textedit.dart';
+import 'package:covid/pages/auth/email_verification.dart';
+import 'package:covid/pages/auth/verification.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,6 +1,5 @@
 import 'dart:async';
-
-import 'package:covid/auth/profile/step1.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/components/textedit.dart';
 import 'package:covid/utils/functions.dart';
@@ -48,9 +47,9 @@ class _VerificationState extends State<Verification> {
   }
 
   void resendOTP() async {
-    if (duration != 0) return;
     try {
       var userData = getUserData(context);
+      print(userData);
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: userData["phoneNumber"],
         verificationCompleted: (PhoneAuthCredential user) {},
@@ -93,25 +92,37 @@ class _VerificationState extends State<Verification> {
         showToast("Your OTP code is expired");
       } else {
         try {
+          print(otpController.value.text);
           PhoneAuthCredential _credential = PhoneAuthProvider.credential(
               verificationId: verificationId,
               smsCode: otpController.value.text);
-          User? user = FirebaseAuth.instance.currentUser;
-          print("current User");
-          print(user);
-          try {
-            user!.updatePhoneNumber(_credential);
-          } catch (e) {
-            print(e);
-            showToast("This phone number is already registered");
-          }
-          print(user);
           if (widget.verifyType == "login")
-            Navigator.pushNamed(context, "/home");
-          else
+            await FirebaseAuth.instance.signInWithCredential(_credential);
+          User? user = FirebaseAuth.instance.currentUser;
+          print("current user: $user");
+          if (user != null) {
+            if (widget.verifyType != "login")
+              user.updatePhoneNumber(_credential);
+            if (widget.verifyType == "login") {
+              setUserData(
+                context,
+                (await FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(user.uid)
+                            .get())
+                        .data() ??
+                    {},
+              );
+              Navigator.pushNamed(context, "/home");
+            } else
+              Navigator.pop(context);
+          } else {
+            showToast("This phone number is not registered");
             Navigator.pop(context);
+          }
         } catch (e) {
           print(e);
+          // showToast("This phone number is already registered");
           showToast("Invalid OTP code");
         }
       }

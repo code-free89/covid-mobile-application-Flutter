@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:covid/auth/verification.dart';
-import 'package:covid/models/user.dart';
+import 'package:covid/pages/auth/verification.dart';
 import 'package:covid/providers/authProvider.dart';
 import 'package:covid/utils/enums.dart';
 import 'package:covid/utils/functions.dart';
@@ -39,7 +38,6 @@ class _LogInState extends State<LogIn> {
         } else {
           UserCredential user = await FirebaseAuth.instance
               .signInWithEmailAndPassword(email: email, password: password);
-          Provider.of<AuthProvider>(context, listen: false).user = user.user!;
           setUserData(
             context,
             (await FirebaseFirestore.instance
@@ -57,6 +55,9 @@ class _LogInState extends State<LogIn> {
           return;
         } else {
           try {
+            var userData = getUserData(context);
+            userData["phoneNumber"] = phoneNumber;
+            setUserData(context, userData);
             await FirebaseAuth.instance.verifyPhoneNumber(
               phoneNumber: phoneNumber,
               verificationCompleted: (PhoneAuthCredential user) {

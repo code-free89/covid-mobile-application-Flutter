@@ -36,11 +36,3 @@ Map<String, dynamic> getUserData(BuildContext context) {
 void setUserData(BuildContext context, Map<String, dynamic> value) {
   Provider.of<AuthProvider>(context, listen: false).userData.fromJson(value);
 }
-
-User getUser(BuildContext context) {
-  return Provider.of<AuthProvider>(context, listen: false).user;
-}
-
-void setUser(BuildContext context, User value) {
-  Provider.of<AuthProvider>(context, listen: false).user = value;
-}

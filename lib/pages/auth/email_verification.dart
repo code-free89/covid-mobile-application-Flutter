@@ -1,6 +1,6 @@
-import 'package:covid/auth/profile/step1.dart';
 import 'package:covid/components/button.dart';
 import 'package:covid/components/textbox.dart';
+import 'package:covid/pages/auth/profile/step1.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
