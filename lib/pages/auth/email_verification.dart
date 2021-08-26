@@ -36,7 +36,7 @@ class _EmailVerificationState extends State<EmailVerification> {
               ),
             );
           else if (widget.verifyType == "verify") {
-            Navigator.pop(context);
+            Navigator.pushNamed(context, "/setupProfile2");
           }
         } else {
           showToast("Please check your email for verification");

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:covid/models/user.dart';
 import 'package:covid/providers/authProvider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -35,4 +37,8 @@ Map<String, dynamic> getUserData(BuildContext context) {
 
 void setUserData(BuildContext context, Map<String, dynamic> value) {
   Provider.of<AuthProvider>(context, listen: false).userData.fromJson(value);
+}
+
+void setUserDB(String userID, Map<String, dynamic> data) {
+  FirebaseFirestore.instance.collection("users").doc(userID).set(data);
 }

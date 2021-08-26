@@ -1,9 +1,9 @@
 import 'package:covid/components/button.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/constants/questions.dart';
-import 'package:covid/utils/enums.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class QuesetionPage extends StatefulWidget {
@@ -53,7 +53,15 @@ class _QuesetionPageState extends State<QuesetionPage> {
                   width: double.infinity,
                   child: TextButton(
                     onPressed: () {
-                      Navigator.popUntil(context, (route) => false);
+                      try {
+                        var userData = getUserData(context);
+                        userData["isFirstTimeLogin"] = false;
+                        setUserData(context, userData);
+                        setUserDB(
+                            FirebaseAuth.instance.currentUser!.uid, userData);
+                      } catch (e) {
+                        print(e);
+                      }
                       Navigator.pushNamed(context, "/home");
                     },
                     child: Container(

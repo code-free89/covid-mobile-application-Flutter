@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:covid/utils/functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,10 +22,32 @@ class SplashState extends State<SplashScreen> {
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       oneSec,
-      (Timer timer) {
+      (Timer timer) async {
         if (isFirebaseConnected == true) {
           _timer.cancel();
-          Navigator.popAndPushNamed(context, '/start');
+          if (FirebaseAuth.instance.currentUser != null) {
+            try {
+              var userData = (await FirebaseFirestore.instance
+                      .collection("users")
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .get())
+                  .data();
+              // setUserData(
+              //   context,
+              //   (await FirebaseFirestore.instance
+              //               .collection("users")
+              //               .doc(FirebaseAuth.instance.currentUser!.uid)
+              //               .get())
+              //           .data() ??
+              //       {},
+              // );
+              print(userData);
+              // Navigator.pushNamed(context, "/home");
+            } catch (e) {
+              print(e);
+            }
+          } else
+            Navigator.popAndPushNamed(context, '/start');
         }
       },
     );
@@ -35,12 +60,15 @@ class SplashState extends State<SplashScreen> {
       final SharedPreferences prefs = await _prefs;
       prefs.getString("app-name");
       await Firebase.initializeApp();
+      // print("signing out");
+      // await FirebaseAuth.instance.signOut();
       setState(() {
         isFirebaseConnected = true;
       });
     } catch (err) {
       /// setMockInitialValues initiates shared preference
       /// Adds app-name
+      // ignore: invalid_use_of_visible_for_testing_member
       SharedPreferences.setMockInitialValues({});
       Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
       final SharedPreferences prefs = await _prefs;
@@ -50,9 +78,9 @@ class SplashState extends State<SplashScreen> {
 
   @override
   void initState() {
-    super.initState();
     sharedPrefInit();
     startTimer();
+    super.initState();
   }
 
   @override

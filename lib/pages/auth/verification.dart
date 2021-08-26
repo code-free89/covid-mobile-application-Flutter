@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/components/textedit.dart';
+import 'package:covid/pages/auth/profile/step1.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -96,13 +97,11 @@ class _VerificationState extends State<Verification> {
           PhoneAuthCredential _credential = PhoneAuthProvider.credential(
               verificationId: verificationId,
               smsCode: otpController.value.text);
-          if (widget.verifyType == "login")
+          if (widget.verifyType == "login" || widget.verifyType == "register")
             await FirebaseAuth.instance.signInWithCredential(_credential);
           User? user = FirebaseAuth.instance.currentUser;
           print("current user: $user");
           if (user != null) {
-            if (widget.verifyType != "login")
-              user.updatePhoneNumber(_credential);
             if (widget.verifyType == "login") {
               setUserData(
                 context,
@@ -113,9 +112,26 @@ class _VerificationState extends State<Verification> {
                         .data() ??
                     {},
               );
-              Navigator.pushNamed(context, "/home");
-            } else
-              Navigator.pop(context);
+              var userData = getUserData(context);
+              print(userData);
+              if (userData["isFirstTimeLogin"] == true)
+                Navigator.pushNamed(context, "/question");
+              else
+                Navigator.pushNamed(context, "/home");
+            } else if (widget.verifyType == "register") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SetupProfile1(
+                    phone: FirebaseAuth.instance.currentUser!.phoneNumber ?? "",
+                    setupType: "phone",
+                  ),
+                ),
+              );
+            } else {
+              user.updatePhoneNumber(_credential);
+              Navigator.pushNamed(context, "/setupProfile2");
+            }
           } else {
             showToast("This phone number is not registered");
             Navigator.pop(context);

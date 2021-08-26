@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid/components/textbox.dart';
-import 'package:covid/models/user.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -19,21 +16,17 @@ class _ProfilePageState extends State<ProfilePage> {
   Map<String, dynamic> userData = {};
   @override
   void initState() {
-    setState(() {
-      userData = getUserData(context);
-    });
-    if (userData["isFirstTimeLogin"] == true) {
-      userData["isFirstTimeLogin"] = false;
-      FirebaseFirestore.instance
-          .collection("users")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .set(userData);
-    }
-    List<String> nameArray = userData["name"].toString().split(" ");
-    for (int i = 0; i < nameArray.length; i++)
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
       setState(() {
-        name += nameArray[i][0].toUpperCase();
+        userData = getUserData(context);
       });
+      List<String> nameArray = userData["name"].toString().split(" ");
+      for (int i = 0; i < nameArray.length; i++)
+        setState(() {
+          name += nameArray[i][0].toUpperCase();
+        });
+    }
     super.initState();
   }
 
@@ -112,7 +105,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextBox(
-                            value: userData["name"],
+                            value:
+                                userData["name"] != "" ? userData["name"] : "",
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
@@ -140,7 +134,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             fontSize: 18,
                           ),
                           TextBox(
-                            value: userData["email"],
+                            value: userData["email"] != ""
+                                ? userData["email"]
+                                : "",
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                           )
@@ -155,7 +151,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             fontSize: 18,
                           ),
                           TextBox(
-                            value: userData["passportNo"],
+                            value: userData["passportNo"] != ""
+                                ? userData["passportNo"]
+                                : "",
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                           )
@@ -170,7 +168,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             fontSize: 18,
                           ),
                           TextBox(
-                            value: userData["state"],
+                            value: userData["state"] != ""
+                                ? userData["state"]
+                                : "",
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                           )
@@ -236,6 +236,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,10 +262,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ],
                           ),
-                          // Image(
-                          //   image: AssetImage('assets/images/img1.png'),
-                          //   fit: BoxFit.fill,
-                          // ),
+                          Image(
+                            image: AssetImage('assets/images/img1.png'),
+                            fit: BoxFit.fill,
+                            width: 80,
+                          ),
                         ],
                       ),
                     ),
@@ -272,30 +274,33 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Image(
                         image: AssetImage('assets/images/sampleQRCode.png'),
                         fit: BoxFit.fill,
-                        height: 150,
+                        height: 250,
                       ),
                     ),
                     Container(
-                      decoration: BoxDecoration(color: Colors.black12),
+                      decoration: BoxDecoration(color: Color(0xFFECECEC)),
+                      padding: EdgeInsets.all(20),
                       child: Row(
                         children: [
                           Expanded(
                             child: TextBox(
                               value:
                                   "This is the QR code for your MySejahtera profile. Please show this to authorities when requested",
-                              fontColor: Colors.black38,
+                              fontColor: Colors.black45,
                               fontSize: 12,
                             ),
                           ),
+                          SizedBox(width: 10),
                           Image(
                             image: AssetImage('assets/images/img1.png'),
                             fit: BoxFit.fill,
-                            height: 150,
+                            height: 50,
                           ),
+                          SizedBox(width: 10),
                           Image(
                             image: AssetImage('assets/images/img2.png'),
                             fit: BoxFit.fill,
-                            height: 150,
+                            height: 50,
                           ),
                         ],
                       ),

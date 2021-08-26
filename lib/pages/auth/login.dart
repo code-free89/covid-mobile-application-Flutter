@@ -47,7 +47,11 @@ class _LogInState extends State<LogIn> {
                     .data() ??
                 {},
           );
-          Navigator.pushNamed(context, "/home");
+          var userData = getUserData(context);
+          if (userData["isFirstTimeLogin"] == true)
+            Navigator.pushNamed(context, "/question");
+          else
+            Navigator.pushNamed(context, "/home");
         }
       } else {
         if (phoneNumber.length < 5) {
