@@ -19,18 +19,6 @@ void showToast(String msg) {
   );
 }
 
-void showAlert({String title = ""}) {
-  AlertDialog(
-    title: Text("asdf"),
-    titleTextStyle: TextStyle(
-        fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
-    backgroundColor: Colors.greenAccent,
-    shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(20))),
-    content: Text("Save successfully"),
-  );
-}
-
 Map<String, dynamic> getUserData(BuildContext context) {
   return Provider.of<AuthProvider>(context, listen: false).userData.toJson();
 }
@@ -41,4 +29,13 @@ void setUserData(BuildContext context, Map<String, dynamic> value) {
 
 void setUserDB(String userID, Map<String, dynamic> data) {
   FirebaseFirestore.instance.collection("users").doc(userID).set(data);
+}
+
+Future<Map<String, dynamic>> getVaccineDataByID(String vaccinID) async {
+  return (await FirebaseFirestore.instance
+              .collection("vaccins")
+              .doc("vaccin-1")
+              .get())
+          .data() ??
+      {};
 }

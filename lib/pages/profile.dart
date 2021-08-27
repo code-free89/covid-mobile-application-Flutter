@@ -1,3 +1,4 @@
+import 'package:covid/components/certificate.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
@@ -14,6 +15,27 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   String name = "";
   Map<String, dynamic> userData = {};
+  Map<String, dynamic> dose1Data = {};
+  Map<String, dynamic> dose2Data = {};
+
+  void getVaccinData() {
+    if (userData["dose1"] != null && userData["dose1"] != "") {
+      getVaccineDataByID(userData["dose1"]).then((value) => {
+            setState(() {
+              dose1Data = value;
+            })
+          });
+    }
+    if (userData["dose2"] != null && userData["dose2"] != "") {
+      getVaccineDataByID(userData["dose2"]).then((value) => {
+            setState(() {
+              dose2Data = value;
+              print(value);
+            })
+          });
+    }
+  }
+
   @override
   void initState() {
     User? user = FirebaseAuth.instance.currentUser;
@@ -26,12 +48,14 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() {
           name += nameArray[i][0].toUpperCase();
         });
+      getVaccinData();
     }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(dose2Data);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 50,
@@ -308,6 +332,281 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
               ),
+              userData["dose1"] != ""
+                  ? Container(
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.only(top: 65),
+                            decoration: BoxDecoration(
+                              color: userData["dose2"] != ""
+                                  ? Color(0xFFF0D272)
+                                  : Colors.white,
+                              border: Border.all(color: Colors.black54),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            padding: EdgeInsets.only(
+                                top: 70, left: 20, bottom: 10, right: 20),
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                          width: 2, color: Colors.black87),
+                                    ),
+                                  ),
+                                  margin: EdgeInsets.only(bottom: 15),
+                                  width: double.infinity,
+                                  child: Column(
+                                    children: [
+                                      TextBox(
+                                        value: "COVID-19 Vaccination",
+                                        fontSize: 20,
+                                        fontColor: Colors.black87,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      TextBox(
+                                        value: "Digital Certificate",
+                                        fontSize: 15,
+                                        padding: 15,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                TextBox(
+                                  value: userData["name"],
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                TextBox(
+                                  value: userData["passportNo"],
+                                  fontSize: 18,
+                                  padding: 20,
+                                ),
+                                TextBox(
+                                  value: userData["address"],
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  padding: 20,
+                                ),
+                                dose2Data.isNotEmpty
+                                    ? Row(
+                                        children: [
+                                          Flexible(
+                                            flex: 1,
+                                            child: CertificatCard(
+                                              title: "Dose 1",
+                                              date:
+                                                  userData["dose1_date"] ?? "",
+                                              manufacturer:
+                                                  dose1Data["manufacturer"] ??
+                                                      "",
+                                              batch: dose1Data["batch"] ?? "",
+                                            ),
+                                          ),
+                                          Flexible(
+                                            flex: 1,
+                                            child: CertificatCard(
+                                              title: "Dose 2",
+                                              date:
+                                                  userData["dose2_date"] ?? "",
+                                              manufacturer:
+                                                  dose2Data["manufacturer"] ??
+                                                      "",
+                                              batch: dose2Data["batch"] ?? "",
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : dose1Data.isNotEmpty
+                                        ? Container(
+                                            margin: EdgeInsets.only(bottom: 20),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        child: TextBox(
+                                                          value: "Dose 1",
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 15,
+                                                          padding: 15,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        child: TextBox(
+                                                          value: "Date: ",
+                                                          fontSize: 14,
+                                                          fontColor:
+                                                              Colors.black54,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        child: TextBox(
+                                                          value: userData[
+                                                              "dose1_date"],
+                                                          fontSize: 12,
+                                                          fontColor:
+                                                              Colors.black54,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        child: TextBox(
+                                                          value:
+                                                              "Manufacturer: ",
+                                                          fontSize: 14,
+                                                          fontColor:
+                                                              Colors.black54,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        child: TextBox(
+                                                          value: dose1Data[
+                                                              "manufacturer"],
+                                                          fontSize: 12,
+                                                          fontColor:
+                                                              Colors.black54,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        child: TextBox(
+                                                          value: "Batch: ",
+                                                          fontSize: 14,
+                                                          fontColor:
+                                                              Colors.black54,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        child: TextBox(
+                                                          value: dose1Data[
+                                                              "batch"],
+                                                          fontSize: 12,
+                                                          fontColor:
+                                                              Colors.black54,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        : Container(),
+                                dose2Data.isNotEmpty
+                                    ? Container(
+                                        margin: EdgeInsets.only(top: 10),
+                                        padding: EdgeInsets.only(
+                                          top: 2,
+                                          left: 8,
+                                          bottom: 2,
+                                          right: 8,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Card(
+                                              child: Image(
+                                                image: AssetImage(
+                                                  "assets/images/sampleQRCode.png",
+                                                ),
+                                                width: 40,
+                                              ),
+                                            ),
+                                            TextBox(
+                                              value: "Scan QR",
+                                              fontColor: Colors.black54,
+                                            )
+                                          ],
+                                        ))
+                                    : Container(),
+                              ],
+                            ),
+                          ),
+                          Positioned(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.black54, width: 2),
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 30, vertical: 20),
+                                    child: Image(
+                                      image:
+                                          AssetImage('assets/images/mosti.png'),
+                                      fit: BoxFit.fill,
+                                      width: 80,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(),
             ],
           ),
         ),

@@ -32,17 +32,8 @@ class SplashState extends State<SplashScreen> {
                       .doc(FirebaseAuth.instance.currentUser!.uid)
                       .get())
                   .data();
-              // setUserData(
-              //   context,
-              //   (await FirebaseFirestore.instance
-              //               .collection("users")
-              //               .doc(FirebaseAuth.instance.currentUser!.uid)
-              //               .get())
-              //           .data() ??
-              //       {},
-              // );
-              print(userData);
-              // Navigator.pushNamed(context, "/home");
+              setUserData(context, userData!);
+              Navigator.pushNamed(context, "/home");
             } catch (e) {
               print(e);
             }

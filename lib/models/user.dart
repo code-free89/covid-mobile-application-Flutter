@@ -13,6 +13,10 @@ class UserData {
   String state;
   bool isVerified;
   bool isFirstTimeLogin;
+  String dose1;
+  String dose2;
+  String dose1_date;
+  String dose2_date;
 
   UserData({
     this.email = "",
@@ -27,6 +31,10 @@ class UserData {
     this.state = "",
     this.isVerified = false,
     this.isFirstTimeLogin = true,
+    this.dose1 = "",
+    this.dose2 = "",
+    this.dose1_date = "",
+    this.dose2_date = "",
   });
 
   void fromJson(Map<String, dynamic> json) {
@@ -42,6 +50,10 @@ class UserData {
     this.state = json["state"];
     this.isVerified = json["isVerified"];
     this.isFirstTimeLogin = json["isFirstTimeLogin"];
+    this.dose1 = json["dose1"];
+    this.dose1_date = json["dose1_date"];
+    this.dose2 = json["dose2"];
+    this.dose2_date = json["dose2_date"];
   }
 
   Map<String, dynamic> toJson() {
@@ -58,6 +70,10 @@ class UserData {
       "state": this.state,
       "isVerified": this.isVerified,
       "isFirstTimeLogin": this.isFirstTimeLogin,
+      "dose1": this.dose1,
+      "dose1_date": this.dose1_date,
+      "dose2": this.dose2,
+      "dose2_date": this.dose2_date,
     };
   }
 }
