@@ -1,12 +1,8 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:covid/models/user.dart';
+import 'package:covid/pages/dashboard.dart';
 import 'package:covid/pages/profile.dart';
-import 'package:covid/providers/authProvider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,9 +14,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
-    Container(),
-    Container(),
-    Container(),
+    DashboardPage(),
+    DashboardPage(),
+    DashboardPage(),
     ProfilePage(),
   ];
 
@@ -50,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                 Icons.home,
                 size: 32,
               ),
-              label: "Home",
+              label: "MySejahtera",
             ),
             BottomNavigationBarItem(
               icon: Icon(

@@ -15,22 +15,36 @@ class SetupProfile2 extends StatefulWidget {
 class _SetupProfile2State extends State<SetupProfile2> {
   TextEditingController addressController = new TextEditingController();
   TextEditingController postCodeController = new TextEditingController();
+  var userData;
+  @override
+  void initState() {
+    setState(() {
+      userData = getUserData(context);
+      userData["gender"] = "male";
+      userData["ethnity"] = "Malay";
+      userData["state"] = "Johor";
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var userData = getUserData(context);
-    userData["gender"] = "male";
-    userData["ethnity"] = "Malay";
-    userData["state"] = "Johor";
     void onChangeGender(String gender) {
-      userData["gender"] = gender;
+      setState(() {
+        userData["gender"] = gender;
+      });
     }
 
     void onChangeEthnity(String ethnity) {
-      userData["ethnity"] = ethnity;
+      setState(() {
+        userData["ethnity"] = ethnity;
+      });
     }
 
     void onChangeState(String state) {
-      userData["state"] = state;
+      setState(() {
+        userData["state"] = state;
+      });
     }
 
     void onSubmit() {
@@ -38,8 +52,11 @@ class _SetupProfile2State extends State<SetupProfile2> {
           postCodeController.value.text == "") {
         showToast("Please input all data");
       } else {
-        userData["address"] = addressController.value.text;
-        userData["postcode"] = postCodeController.value.text;
+        setState(() {
+          userData["address"] = addressController.value.text;
+          userData["postcode"] = postCodeController.value.text;
+        });
+        print(userData);
         setUserData(context, userData);
         Navigator.pushNamed(context, "/setupProfile3");
       }

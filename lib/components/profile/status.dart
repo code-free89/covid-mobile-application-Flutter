@@ -1,6 +1,8 @@
 import 'package:covid/components/profile/status-card.dart';
 import 'package:covid/components/textbox.dart';
+import 'package:covid/providers/authProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class StatusCard extends StatefulWidget {
   const StatusCard({Key? key}) : super(key: key);
@@ -19,7 +21,8 @@ class _StatusCardState extends State<StatusCard> {
             width: double.infinity,
             padding: EdgeInsets.all(14),
             child: TextBox(
-              value: "As of 24 Aug 2021, 8:34 AM",
+              value: Provider.of<AuthProvider>(context, listen: false)
+                  .currentDateTime,
               fontSize: 14,
               fontStyle: FontStyle.italic,
             ),

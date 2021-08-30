@@ -1,5 +1,8 @@
 import 'package:covid/components/textbox.dart';
+import 'package:covid/providers/authProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class RefreshCard extends StatefulWidget {
   const RefreshCard({Key? key}) : super(key: key);
@@ -15,38 +18,47 @@ class _RefreshCardState extends State<RefreshCard> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(40),
       ),
-      child: Container(
-        padding: EdgeInsets.all(15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.cached_outlined,
-                  size: 28,
+      child: InkWell(
+        child: Container(
+          padding: EdgeInsets.all(15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.cached_outlined,
+                    size: 28,
+                  ),
+                  SizedBox(width: 15),
+                  TextBox(
+                    value: "Click to refresh your profile",
+                    fontColor: Colors.black87,
+                    fontSize: 14,
+                  ),
+                ],
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  color: Colors.black12,
                 ),
-                SizedBox(width: 15),
-                TextBox(
-                  value: "Click to refresh your profile",
-                  fontColor: Colors.black87,
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                child: TextBox(
+                  value: "Refresh",
                   fontSize: 14,
                 ),
-              ],
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                color: Colors.black12,
               ),
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-              child: TextBox(
-                value: "Refresh",
-                fontSize: 14,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
+        onTap: () {
+          DateTime now = DateTime.now();
+          String formattedDate =
+              DateFormat('dd MMM yyyy,').add_jm().format(now);
+          Provider.of<AuthProvider>(context, listen: false).currentDateTime =
+              "As of $formattedDate";
+        },
       ),
     );
   }
