@@ -1,5 +1,14 @@
-import 'package:covid/components/certificate.dart';
+import 'dart:math';
+
+import 'package:covid/components/profile/certificated.dart';
+import 'package:covid/components/profile/info.dart';
+import 'package:covid/components/profile/name.dart';
+import 'package:covid/components/profile/pending.dart';
+import 'package:covid/components/profile/qr.dart';
+import 'package:covid/components/profile/refresh.dart';
+import 'package:covid/components/profile/status.dart';
 import 'package:covid/components/textbox.dart';
+import 'package:covid/constants/settings-menu.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,9 +23,14 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String name = "";
+  bool _showFrontSide = false;
   Map<String, dynamic> userData = {};
   Map<String, dynamic> dose1Data = {};
   Map<String, dynamic> dose2Data = {};
+  final ScrollController _scrollController = new ScrollController();
+  bool _isScrolled = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  PageController _pageController = new PageController();
 
   void getVaccinData() {
     if (userData["dose1"] != null && userData["dose1"] != "") {
@@ -30,7 +44,6 @@ class _ProfilePageState extends State<ProfilePage> {
       getVaccineDataByID(userData["dose2"]).then((value) => {
             setState(() {
               dose2Data = value;
-              print(value);
             })
           });
     }
@@ -50,567 +63,286 @@ class _ProfilePageState extends State<ProfilePage> {
         });
       getVaccinData();
     }
+    _scrollController.addListener(() {
+      double curPos = _scrollController.position.pixels;
+      setState(() {
+        _isScrolled = curPos > 150 ? true : false;
+      });
+    });
     super.initState();
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print(dose2Data);
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 50,
-        title: Center(
-          child: Text("Profile"),
-        ),
+        key: _scaffoldKey,
+        toolbarHeight: 42,
+        backgroundColor: AppStyles.primaryColor,
+        title: !_isScrolled
+            ? Text(
+                "Profile",
+                style: TextStyle(fontSize: 30),
+              )
+            : Center(
+                child: Text("Profile"),
+              ),
+        leading: Container(),
+        leadingWidth: 0,
+        shadowColor: Colors.transparent,
       ),
       drawerEnableOpenDragGesture: false,
-      endDrawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.shopping_cart),
-              title: Text('Checkout'),
-              onTap: () {
-                Navigator.pushNamed(context, '/home');
-              },
+      endDrawer: Container(
+        width: MediaQuery.of(context).size.width,
+        child: Drawer(
+          child: Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.keyboard_arrow_left, size: 45),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              title: Center(child: Text("Settings")),
             ),
-            ListTile(
-              leading: Icon(Icons.report),
-              title: Text('Transactions'),
-              onTap: () {
-                Navigator.pushNamed(context, '/transactionsList');
-              },
+            body: Container(
+              decoration: BoxDecoration(color: Color(0xFFE9E9E9)),
+              padding:
+                  EdgeInsets.only(top: 10, left: 10, bottom: 100, right: 10),
+              child: Card(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    ListTile(
+                      leading: Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xFFF0F0F0),
+                          shape: BoxShape.circle,
+                        ),
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppStyles.primaryColor,
+                          ),
+                        ),
+                      ),
+                      title: Text('My Personal Details'),
+                      trailing: Icon(Icons.keyboard_arrow_right),
+                      dense: false,
+                      contentPadding: EdgeInsets.only(
+                        top: 10,
+                        left: 10,
+                        bottom: 0,
+                        right: 20,
+                      ),
+                      horizontalTitleGap: 20,
+                    ),
+                    ...settings
+                        .map((setting) => ListTile(
+                              leading: Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFF0F0F0),
+                                  shape: BoxShape.circle,
+                                ),
+                                padding: EdgeInsets.all(10),
+                                child: setting["icon"],
+                              ),
+                              title: Text(setting["title"]),
+                              trailing: Icon(Icons.keyboard_arrow_right),
+                              dense: false,
+                              contentPadding: EdgeInsets.only(
+                                top: 0,
+                                left: 10,
+                                bottom: 0,
+                                right: 20,
+                              ),
+                              horizontalTitleGap: 20,
+                              onTap: () {
+                                if (setting["title"]
+                                    .toString()
+                                    .contains("Logout")) {
+                                  FirebaseAuth.instance.signOut();
+                                  Navigator.popUntil(context, (route) => true);
+                                  Navigator.pushNamed(context, "/login");
+                                }
+                              },
+                            ))
+                        .toList(),
+                  ],
+                ),
+              ),
             ),
-            ListTile(
-              leading: Icon(Icons.logout_outlined),
-              title: Text('Logout'),
-              onTap: () async {
-                try {
-                  await FirebaseAuth.instance.signOut();
-                  Navigator.pushNamed(context, '/login');
-                } catch (e) {}
-              },
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        child: Stack(
+          children: [
+            Positioned(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppStyles.primaryColor,
+                ),
+                height: 150,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  NameCard(name: name),
+                  InformationCard(),
+                  RefreshCard(),
+                  StatusCard(),
+                  SizedBox(height: 15),
+                  userData["dose1"] != ""
+                      ? Stack(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              margin: EdgeInsets.only(top: 50),
+                              decoration: BoxDecoration(
+                                color: userData["dose2"] != ""
+                                    ? Color(0xFFFDD775)
+                                    : Colors.white,
+                                border: Border.all(color: Colors.black),
+                                borderRadius: BorderRadius.circular(45),
+                              ),
+                              padding: EdgeInsets.only(
+                                  top: 60, left: 20, bottom: 10, right: 20),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          width: 3,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ),
+                                    margin: EdgeInsets.only(bottom: 8),
+                                    width: double.infinity,
+                                    child: Column(
+                                      children: [
+                                        TextBox(
+                                          value: "COVID-19 Vaccination",
+                                          fontSize: 23,
+                                          fontColor: Colors.black87,
+                                          fontWeight: FontWeight.bold,
+                                          padding: 10,
+                                        ),
+                                        TextBox(
+                                          value: "Digital Certificate",
+                                          fontSize: 20,
+                                          padding: 10,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  dose2Data.isNotEmpty
+                                      ? AnimatedSwitcher(
+                                          duration: Duration(milliseconds: 700),
+                                          transitionBuilder:
+                                              __transitionBuilder,
+                                          child: !_showFrontSide
+                                              ? CertificatedWidget(
+                                                  userData: userData,
+                                                  dose1Data: dose1Data,
+                                                  dose2Data: dose2Data,
+                                                  onTap: () {
+                                                    setState(() {
+                                                      _showFrontSide = true;
+                                                    });
+                                                  },
+                                                )
+                                              : QRWidget(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      _showFrontSide = false;
+                                                    });
+                                                  },
+                                                ),
+                                          layoutBuilder: (widget, list) =>
+                                              Stack(
+                                            children: [
+                                              widget ?? Container(),
+                                              ...list
+                                            ],
+                                          ),
+                                        )
+                                      : dose1Data.isNotEmpty
+                                          ? PendingWidget(
+                                              context, userData, dose1Data)
+                                          : Container(),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 130,
+                                    height: 100,
+                                    padding: EdgeInsets.all(15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.elliptical(130, 100)),
+                                      border: Border.all(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    child: Image(
+                                      image:
+                                          AssetImage("assets/images/mosti.png"),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(),
+                  SizedBox(
+                    height: 20,
+                  )
+                ],
+              ),
             ),
           ],
         ),
       ),
-      body: Container(
-        decoration: BoxDecoration(color: Colors.black12),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Card(
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppStyles.lightGrayColor,
-                        ),
-                        padding: EdgeInsets.all(10),
-                        child: Center(
-                          child: TextBox(
-                            value: this.name,
-                            fontWeight: FontWeight.bold,
-                            fontColor: AppStyles.primaryColor,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextBox(
-                            value:
-                                userData["name"] != "" ? userData["name"] : "",
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          TextBox(
-                            value: "Low Risk No Symptom",
-                            fontSize: 15,
-                            fontColor: Colors.black87,
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Card(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextBox(
-                            value: "MySJ ID",
-                            fontSize: 18,
-                          ),
-                          TextBox(
-                            value: userData["email"] != ""
-                                ? userData["email"]
-                                : "",
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextBox(
-                            value: "IC / Passport No",
-                            fontSize: 18,
-                          ),
-                          TextBox(
-                            value: userData["passportNo"] != ""
-                                ? userData["passportNo"]
-                                : "",
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextBox(
-                            value: "State",
-                            fontSize: 18,
-                          ),
-                          TextBox(
-                            value: userData["state"] != ""
-                                ? userData["state"]
-                                : "",
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                child: Container(
-                  padding: EdgeInsets.all(15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.cached_outlined,
-                            size: 30,
-                          ),
-                          SizedBox(width: 15),
-                          TextBox(
-                            value: "Click to refresh your profile",
-                            fontSize: 15,
-                          ),
-                        ],
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: Colors.black12,
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                        child: TextBox(
-                          value: "Refresh",
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Card(
-                child: Column(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(15),
-                      child: TextBox(
-                        value: "As of 24 Aug 2021, 8:34 AM",
-                        fontSize: 15,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(color: Color(0xFF51A6EC)),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextBox(
-                                value: "Status Risika COVID-19",
-                                fontWeight: FontWeight.bold,
-                                fontColor: Colors.white,
-                                fontSize: 12,
-                              ),
-                              TextBox(
-                                value: "COVID-19 Risk Status",
-                                fontWeight: FontWeight.bold,
-                                fontColor: Colors.white,
-                                fontSize: 12,
-                                padding: 15,
-                              ),
-                              TextBox(
-                                value: "Risiko Rendah / Low Risk",
-                                fontWeight: FontWeight.bold,
-                                fontColor: Colors.white,
-                                fontSize: 18,
-                              ),
-                            ],
-                          ),
-                          Image(
-                            image: AssetImage('assets/images/img1.png'),
-                            fit: BoxFit.fill,
-                            width: 80,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      child: Image(
-                        image: AssetImage('assets/images/sampleQRCode.png'),
-                        fit: BoxFit.fill,
-                        height: 250,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(color: Color(0xFFECECEC)),
-                      padding: EdgeInsets.all(20),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextBox(
-                              value:
-                                  "This is the QR code for your MySejahtera profile. Please show this to authorities when requested",
-                              fontColor: Colors.black45,
-                              fontSize: 12,
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Image(
-                            image: AssetImage('assets/images/img1.png'),
-                            fit: BoxFit.fill,
-                            height: 50,
-                          ),
-                          SizedBox(width: 10),
-                          Image(
-                            image: AssetImage('assets/images/img2.png'),
-                            fit: BoxFit.fill,
-                            height: 50,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              userData["dose1"] != ""
-                  ? Container(
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            margin: EdgeInsets.only(top: 65),
-                            decoration: BoxDecoration(
-                              color: userData["dose2"] != ""
-                                  ? Color(0xFFF0D272)
-                                  : Colors.white,
-                              border: Border.all(color: Colors.black54),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            padding: EdgeInsets.only(
-                                top: 70, left: 20, bottom: 10, right: 20),
-                            child: Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                          width: 2, color: Colors.black87),
-                                    ),
-                                  ),
-                                  margin: EdgeInsets.only(bottom: 15),
-                                  width: double.infinity,
-                                  child: Column(
-                                    children: [
-                                      TextBox(
-                                        value: "COVID-19 Vaccination",
-                                        fontSize: 20,
-                                        fontColor: Colors.black87,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      TextBox(
-                                        value: "Digital Certificate",
-                                        fontSize: 15,
-                                        padding: 15,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                TextBox(
-                                  value: userData["name"],
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                TextBox(
-                                  value: userData["passportNo"],
-                                  fontSize: 18,
-                                  padding: 20,
-                                ),
-                                TextBox(
-                                  value: userData["address"],
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  padding: 20,
-                                ),
-                                dose2Data.isNotEmpty
-                                    ? Row(
-                                        children: [
-                                          Flexible(
-                                            flex: 1,
-                                            child: CertificatCard(
-                                              title: "Dose 1",
-                                              date:
-                                                  userData["dose1_date"] ?? "",
-                                              manufacturer:
-                                                  dose1Data["manufacturer"] ??
-                                                      "",
-                                              batch: dose1Data["batch"] ?? "",
-                                            ),
-                                          ),
-                                          Flexible(
-                                            flex: 1,
-                                            child: CertificatCard(
-                                              title: "Dose 2",
-                                              date:
-                                                  userData["dose2_date"] ?? "",
-                                              manufacturer:
-                                                  dose2Data["manufacturer"] ??
-                                                      "",
-                                              batch: dose2Data["batch"] ?? "",
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : dose1Data.isNotEmpty
-                                        ? Container(
-                                            margin: EdgeInsets.only(bottom: 20),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Flexible(
-                                                      flex: 1,
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        child: TextBox(
-                                                          value: "Dose 1",
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 15,
-                                                          padding: 15,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Flexible(
-                                                      flex: 1,
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Flexible(
-                                                      flex: 1,
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        child: TextBox(
-                                                          value: "Date: ",
-                                                          fontSize: 14,
-                                                          fontColor:
-                                                              Colors.black54,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Flexible(
-                                                      flex: 1,
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        child: TextBox(
-                                                          value: userData[
-                                                              "dose1_date"],
-                                                          fontSize: 12,
-                                                          fontColor:
-                                                              Colors.black54,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Flexible(
-                                                      flex: 1,
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        child: TextBox(
-                                                          value:
-                                                              "Manufacturer: ",
-                                                          fontSize: 14,
-                                                          fontColor:
-                                                              Colors.black54,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Flexible(
-                                                      flex: 1,
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        child: TextBox(
-                                                          value: dose1Data[
-                                                              "manufacturer"],
-                                                          fontSize: 12,
-                                                          fontColor:
-                                                              Colors.black54,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Flexible(
-                                                      flex: 1,
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        child: TextBox(
-                                                          value: "Batch: ",
-                                                          fontSize: 14,
-                                                          fontColor:
-                                                              Colors.black54,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Flexible(
-                                                      flex: 1,
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        child: TextBox(
-                                                          value: dose1Data[
-                                                              "batch"],
-                                                          fontSize: 12,
-                                                          fontColor:
-                                                              Colors.black54,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        : Container(),
-                                dose2Data.isNotEmpty
-                                    ? Container(
-                                        margin: EdgeInsets.only(top: 10),
-                                        padding: EdgeInsets.only(
-                                          top: 2,
-                                          left: 8,
-                                          bottom: 2,
-                                          right: 8,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            Card(
-                                              child: Image(
-                                                image: AssetImage(
-                                                  "assets/images/sampleQRCode.png",
-                                                ),
-                                                width: 40,
-                                              ),
-                                            ),
-                                            TextBox(
-                                              value: "Scan QR",
-                                              fontColor: Colors.black54,
-                                            )
-                                          ],
-                                        ))
-                                    : Container(),
-                              ],
-                            ),
-                          ),
-                          Positioned(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Center(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.black54, width: 2),
-                                      shape: BoxShape.circle,
-                                      color: Colors.white,
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 30, vertical: 20),
-                                    child: Image(
-                                      image:
-                                          AssetImage('assets/images/mosti.png'),
-                                      fit: BoxFit.fill,
-                                      width: 80,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(),
-            ],
-          ),
-        ),
-      ),
+    );
+  }
+
+  Widget __transitionBuilder(Widget widget, Animation<double> animation) {
+    final rotateAnim = Tween(begin: pi, end: 0.0).animate(animation);
+    return AnimatedBuilder(
+      animation: rotateAnim,
+      child: widget,
+      builder: (context, widget) {
+        final isUnder = (ValueKey(_showFrontSide) != widget!.key);
+        final value =
+            isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
+        return Transform(
+          transform: Matrix4.rotationY(value),
+          child: widget,
+          alignment: Alignment.center,
+        );
+      },
     );
   }
 }

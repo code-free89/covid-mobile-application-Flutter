@@ -8,6 +8,7 @@ class TextBox extends StatefulWidget {
   final double padding;
   final FontStyle fontStyle;
   final TextAlign textAlign;
+  final double lineHeight;
   const TextBox(
       {this.value = "",
       this.fontColor = Colors.black,
@@ -16,6 +17,7 @@ class TextBox extends StatefulWidget {
       this.fontStyle = FontStyle.normal,
       this.padding = 3,
       this.textAlign = TextAlign.start,
+      this.lineHeight = 1,
       Key? key})
       : super(key: key);
 
@@ -36,6 +38,7 @@ class _TextBoxState extends State<TextBox> {
           fontWeight: widget.fontWeight,
           fontSize: widget.fontSize,
           fontStyle: widget.fontStyle,
+          height: widget.lineHeight,
         ),
       ),
     );
