@@ -1,3 +1,5 @@
+import 'package:covid/components/dashboard/status.dart';
+import 'package:covid/components/dashboard/tabmenu.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/constants/dashboard-menu.dart';
 import 'package:covid/utils/styles.dart';
@@ -50,57 +52,32 @@ class _DashboardPageState extends State<DashboardPage> {
         leadingWidth: 0,
         shadowColor: Colors.transparent,
       ),
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        child: Stack(
-          children: [
-            Positioned(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppStyles.primaryColor,
-                ),
-                height: 150,
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Card(
-                    child: GridView.count(
-                      crossAxisCount: 3,
-                      padding: EdgeInsets.only(
-                        top: 15,
-                        left: 15,
-                        bottom: 0,
-                        right: 15,
-                      ),
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      childAspectRatio: 1.3,
-                      children: dashboardMenus
-                          .map(
-                            (dashboardMenu) => Column(
-                              children: [
-                                dashboardMenu["icon"],
-                                SizedBox(height: 5),
-                                TextBox(
-                                  value: dashboardMenu["title"],
-                                  textAlign: TextAlign.center,
-                                  fontSize: 12,
-                                  fontColor: Colors.black54,
-                                  lineHeight: 1.3,
-                                ),
-                              ],
-                            ),
-                          )
-                          .toList(),
-                    ),
+      body: Container(
+        decoration: BoxDecoration(color: Color(0xFFEEEEEE)),
+        height: MediaQuery.of(context).size.height,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: Stack(
+            children: [
+              Positioned(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppStyles.primaryColor,
                   ),
-                ],
+                  height: 150,
+                ),
               ),
-            ),
-          ],
+              Container(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    DashboardStatusCard(),
+                    TabMenu(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -39,3 +39,10 @@ Future<Map<String, dynamic>> getVaccineDataByID(String vaccinID) async {
           .data() ??
       {};
 }
+
+Future<List<Map<String, dynamic>>> getNews() async {
+  return (await FirebaseFirestore.instance.collection("news").get())
+      .docs
+      .map((e) => e.data())
+      .toList();
+}
