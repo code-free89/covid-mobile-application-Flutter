@@ -39,6 +39,7 @@ dependencies:
   email_validator: ^2.0.1
   mailer: ^5.0.2
   provider: ^6.0.0
+  flutter_svg: ^0.22.0
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +59,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/images/home/
     - .env
   # To add assets to your application, add an assets section, like this:
   # assets:
