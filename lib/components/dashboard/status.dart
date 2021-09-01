@@ -10,6 +10,21 @@ class DashboardStatusCard extends StatefulWidget {
 }
 
 class _DashboardStatusCardState extends State<DashboardStatusCard> {
+  List<Function> functions = [
+    (BuildContext context) {
+      Navigator.pushNamed(context, "/status");
+    },
+    (BuildContext context) {
+      Navigator.pushNamed(context, "/vaccination");
+    },
+    (BuildContext context) {},
+    (BuildContext context) {},
+    (BuildContext context) {},
+    (BuildContext context) {},
+    (BuildContext context) {},
+    (BuildContext context) {}
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -25,21 +40,31 @@ class _DashboardStatusCardState extends State<DashboardStatusCard> {
         shrinkWrap: true,
         childAspectRatio: 1.4,
         children: dashboardMenus
+            .asMap()
             .map(
-              (dashboardMenu) => Column(
-                children: [
-                  dashboardMenu["icon"],
-                  SizedBox(height: 4),
-                  TextBox(
-                    value: dashboardMenu["title"],
-                    textAlign: TextAlign.center,
-                    fontSize: 12,
-                    fontColor: Colors.black54,
-                    lineHeight: 1.3,
+              (index, dashboardMenu) => MapEntry(
+                index,
+                InkWell(
+                  child: Column(
+                    children: [
+                      dashboardMenu["icon"],
+                      SizedBox(height: 4),
+                      TextBox(
+                        value: dashboardMenu["title"],
+                        textAlign: TextAlign.center,
+                        fontSize: 12,
+                        fontColor: Colors.black54,
+                        lineHeight: 1.3,
+                      ),
+                    ],
                   ),
-                ],
+                  onTap: () {
+                    functions[index](context);
+                  },
+                ),
               ),
             )
+            .values
             .toList(),
       ),
     );

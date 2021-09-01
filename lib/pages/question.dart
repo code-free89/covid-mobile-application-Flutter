@@ -62,7 +62,8 @@ class _QuesetionPageState extends State<QuesetionPage> {
                       } catch (e) {
                         print(e);
                       }
-                      Navigator.pushNamed(context, "/home");
+                      Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                     child: Container(
                       width: double.infinity,
@@ -182,12 +183,19 @@ class _QuesetionPageState extends State<QuesetionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Container(),
-        leadingWidth: 0,
-        toolbarHeight: 60,
-        title: Center(
-          child: Text("Questions"),
+        toolbarHeight: 40,
+        leading: InkWell(
+          child: Icon(
+            Icons.keyboard_arrow_left,
+            size: 35,
+          ),
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
+        centerTitle: true,
+        shadowColor: Colors.transparent,
+        title: Text("Questions"),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -210,6 +218,7 @@ class _QuesetionPageState extends State<QuesetionPage> {
                                     value:
                                         "${question["id"]}. ${question["question"]}",
                                     fontSize: 15,
+                                    lineHeight: 1.3,
                                   ),
                                   for (int j = 0;
                                       j < question["answers"].length;
@@ -217,6 +226,7 @@ class _QuesetionPageState extends State<QuesetionPage> {
                                     TextBox(
                                       value: "· ${question["answers"][j]}",
                                       fontSize: 15,
+                                      lineHeight: 1.3,
                                     ),
                                   RadioListTile(
                                     title: Text("No/Tidak"),
@@ -256,12 +266,12 @@ class _QuesetionPageState extends State<QuesetionPage> {
             Positioned(
               bottom: 0,
               child: Container(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 width: MediaQuery.of(context).size.width,
-                height: 60,
+                height: 50,
                 decoration: BoxDecoration(
                   border: Border(
-                    top: BorderSide(width: 1, color: Colors.black38),
+                    top: BorderSide(width: 1, color: Colors.black26),
                   ),
                 ),
                 child: Center(
@@ -269,7 +279,10 @@ class _QuesetionPageState extends State<QuesetionPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
                         child: Text(
                           "Cancel",
                           style: TextStyle(color: Colors.black),

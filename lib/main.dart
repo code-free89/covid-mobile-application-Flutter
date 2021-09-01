@@ -1,3 +1,4 @@
+import 'package:covid/components/dashboard/vaccination.dart';
 import 'package:covid/pages/auth/forget.dart';
 import 'package:covid/pages/auth/login.dart';
 import 'package:covid/pages/auth/profile/step2.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         '/status': (context) => StatusPage(),
         '/question': (context) => QuesetionPage(),
         '/home': (context) => HomePage(),
+        '/vaccination': (context) => VaccinationWidget(),
       },
     );
   }

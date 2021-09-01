@@ -1,6 +1,7 @@
 import 'package:covid/components/textbox.dart';
 import 'package:covid/providers/authProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -26,15 +27,16 @@ class _RefreshCardState extends State<RefreshCard> {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.cached_outlined,
-                    size: 28,
+                  SvgPicture.asset(
+                    "assets/images/refresh.svg",
+                    width: 20,
+                    height: 20,
                   ),
                   SizedBox(width: 15),
                   TextBox(
                     value: "Click to refresh your profile",
                     fontColor: Colors.black87,
-                    fontSize: 14,
+                    fontSize: 15,
                   ),
                 ],
               ),

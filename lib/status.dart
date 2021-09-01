@@ -16,12 +16,18 @@ class _StatusPageState extends State<StatusPage> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 40,
-        leadingWidth: 0,
-        leading: Container(),
-        shadowColor: Colors.transparent,
-        title: Center(
-          child: Text("Status"),
+        leading: InkWell(
+          child: Icon(
+            Icons.keyboard_arrow_left,
+            size: 35,
+          ),
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
+        centerTitle: true,
+        shadowColor: Colors.transparent,
+        title: Text("Status"),
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,

@@ -12,7 +12,7 @@ List<Map<String, dynamic>> dashboardMenus = [
     "title": "COVID-19 Vaccination",
   },
   {
-    "icon": SvgPicture.asset("assets/images/home/RiskStatus.svg",
+    "icon": SvgPicture.asset("assets/images/home/SelfTest.svg",
         width: 40, height: 40),
     "title": "COVID-19 Self Test",
   },
@@ -27,7 +27,7 @@ List<Map<String, dynamic>> dashboardMenus = [
     "title": "Hotspot",
   },
   {
-    "icon": SvgPicture.asset("assets/images/home/RiskStatus.svg",
+    "icon": SvgPicture.asset("assets/images/home/HelpDesk.svg",
         width: 40, height: 40),
     "title": "Helpdesk",
   },

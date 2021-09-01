@@ -21,7 +21,7 @@ class _StatusCardState extends State<StatusCard> {
             width: double.infinity,
             padding: EdgeInsets.all(14),
             child: TextBox(
-              value: Provider.of<AuthProvider>(context, listen: false)
+              value: Provider.of<AuthProvider>(context, listen: true)
                   .currentDateTime,
               fontSize: 14,
               fontStyle: FontStyle.italic,
