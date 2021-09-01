@@ -7,7 +7,8 @@ import 'package:covid/pages/statistics.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final int initialPage;
+  const HomePage({this.initialPage = 0, Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -24,6 +25,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    _currentIndex = widget.initialPage;
     super.initState();
   }
 

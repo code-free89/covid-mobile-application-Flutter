@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100" height="100" viewBox="0 0 100 100">
+  <defs>
+    <clipPath id="clip-iPhone_X_XS_11_Pro_2">
+      <rect width="100" height="100"/>
+    </clipPath>
+  </defs>
+  <g id="iPhone_X_XS_11_Pro_2" data-name="iPhone X/XS/11 Pro – 2" clip-path="url(#clip-iPhone_X_XS_11_Pro_2)">
+    <rect width="100" height="100" fill="#fff"/>
+    <g id="tick" transform="translate(-10.87 -10.87)">
+      <path id="Path_13" data-name="Path 13" d="M205.884,55.652l-16.667,50,16.667,50a50,50,0,0,0,0-100Z" transform="translate(-145.014 -44.782)" fill="#00e74d"/>
+      <path id="Path_14" data-name="Path 14" d="M55.652,105.652a50.057,50.057,0,0,0,50,50v-100A50.057,50.057,0,0,0,55.652,105.652Z" transform="translate(-44.782 -44.782)" fill="#0f5"/>
+      <path id="Path_15" data-name="Path 15" d="M261.665,150.185l-22.37,22.37-5.556,23.57h5.556l34.155-34.155Z" transform="translate(-178.425 -115.723)" fill="#ebebeb"/>
+      <path id="Path_16" data-name="Path 16" d="M134.859,229.841,118.95,213.93l-11.786,11.784,27.694,27.7,9.45-9.451v-23.57Z" transform="translate(-83.439 -163.56)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

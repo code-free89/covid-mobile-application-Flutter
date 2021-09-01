@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
       title: 'COVID',
       theme: ThemeData(
         primarySwatch: Palette.kToDark,
+        scaffoldBackgroundColor: const Color(0xFFEBEBEB),
       ),
       home: HomePage(),
       initialRoute: '/splash',

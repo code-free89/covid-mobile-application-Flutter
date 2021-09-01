@@ -1,3 +1,6 @@
+import 'package:covid/components/dashboard/vaccination-dependent.dart';
+import 'package:covid/components/dashboard/vaccination-information.dart';
+import 'package:covid/components/dashboard/vaccination-status.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
@@ -17,6 +20,11 @@ class _VaccinationWidgetState extends State<VaccinationWidget> {
   int currentPage = 0;
   late Map<String, dynamic> userData;
   String name = "";
+  List<Widget> statusTabs = [
+    VaccinationStatus(),
+    VaccinationDependent(),
+    VaccinationInformation(),
+  ];
 
   @override
   void initState() {
@@ -59,24 +67,33 @@ class _VaccinationWidgetState extends State<VaccinationWidget> {
         child: Drawer(
           child: Scaffold(
             appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(Icons.keyboard_arrow_left, size: 45),
-                onPressed: () {
+              toolbarHeight: 50,
+              leading: InkWell(
+                child: Icon(
+                  Icons.keyboard_arrow_left,
+                  size: 35,
+                ),
+                onTap: () {
                   Navigator.pop(context);
                 },
               ),
-              title: Center(child: Text("Settings")),
+              centerTitle: true,
+              shadowColor: Colors.transparent,
+              title: Text("Vaccination"),
+            ),
+            body: Padding(
+              padding: EdgeInsets.all(10),
+              child: statusTabs[currentPage],
             ),
           ),
         ),
       ),
       body: Builder(
         builder: (context) => Container(
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(color: Color(0xFFEBEBEB)),
+          height: 310,
           padding: EdgeInsets.all(10),
           child: Card(
-            child: ListView(
+            child: Column(
               children: [
                 ListTile(
                   leading: Container(
