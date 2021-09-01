@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:covid/pages/check-in.dart';
 import 'package:covid/pages/dashboard.dart';
 import 'package:covid/pages/profile.dart';
+import 'package:covid/pages/statistics.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,8 +17,8 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     DashboardPage(),
-    DashboardPage(),
-    DashboardPage(),
+    StatisticsPage(),
+    CheckInPage(),
     ProfilePage(),
   ];
 

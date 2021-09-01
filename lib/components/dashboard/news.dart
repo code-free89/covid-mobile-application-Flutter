@@ -1,5 +1,6 @@
 import 'package:covid/components/dashboard/newscard.dart';
 import 'package:covid/utils/functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class NewsPage extends StatefulWidget {
@@ -13,7 +14,7 @@ class _NewsPageState extends State<NewsPage> {
   List<Map<String, dynamic>> newsData = [];
   @override
   void initState() {
-    getNewsData();
+    if (FirebaseAuth.instance.currentUser != null) getNewsData();
     super.initState();
   }
 
