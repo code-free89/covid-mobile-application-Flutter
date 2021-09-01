@@ -46,3 +46,30 @@ Future<List<Map<String, dynamic>>> getNews() async {
       .map((e) => e.data())
       .toList();
 }
+
+Future<Map<String, dynamic>> getStatisticsUpdate() async {
+  return (await FirebaseFirestore.instance
+              .collection("statistics")
+              .doc("update")
+              .get())
+          .data() ??
+      {};
+}
+
+Future<Map<String, dynamic>> getStatisticsStates() async {
+  return (await FirebaseFirestore.instance
+              .collection("statistics")
+              .doc("states")
+              .get())
+          .data() ??
+      {};
+}
+
+Future<Map<String, dynamic>> getStatisticsGlobal() async {
+  return (await FirebaseFirestore.instance
+              .collection("statistics")
+              .doc("global")
+              .get())
+          .data() ??
+      {};
+}

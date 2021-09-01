@@ -1,3 +1,7 @@
+import 'package:covid/components/statistics/global.dart';
+import 'package:covid/components/statistics/states.dart';
+import 'package:covid/components/statistics/tabmenu.dart';
+import 'package:covid/components/statistics/update.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +14,13 @@ class StatisticsPage extends StatefulWidget {
 
 class _StatisticsPageState extends State<StatisticsPage> {
   bool _isScrolled = false;
+  int currentIndex = 0;
   final ScrollController _scrollController = new ScrollController();
+  List<Widget> _tabs = [
+    StatisticUpdate(),
+    StatisticsStates(),
+    StatisticsGlobal(),
+  ];
 
   @override
   void initState() {
@@ -57,33 +67,73 @@ class _StatisticsPageState extends State<StatisticsPage> {
             children: [
               Positioned(
                 top: 0,
-                height: 80,
                 width: MediaQuery.of(context).size.width,
                 child: Container(
-                  height: 80,
+                  height: 70,
                   decoration: BoxDecoration(
                     color: AppStyles.primaryColor,
                   ),
                   child: SingleChildScrollView(
-                    child: Row(
-                      children: [],
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      child: Row(
+                        children: [
+                          StatisticTab(
+                            index: 0,
+                            value: "COVID-19 Update",
+                            currentIndex: currentIndex,
+                            onTap: () {
+                              setState(() {
+                                currentIndex = 0;
+                              });
+                            },
+                          ),
+                          StatisticTab(
+                            index: 1,
+                            value: "COVID-19 States",
+                            currentIndex: currentIndex,
+                            onTap: () {
+                              setState(() {
+                                currentIndex = 1;
+                              });
+                            },
+                          ),
+                          StatisticTab(
+                            index: 2,
+                            value: "COVID-19 Global Update",
+                            currentIndex: currentIndex,
+                            onTap: () {
+                              setState(() {
+                                currentIndex = 2;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
               Positioned(
-                top: 80,
+                top: 70,
                 height: 150,
                 width: MediaQuery.of(context).size.width,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: AppStyles.primaryColor,
                   ),
                   height: 150,
                 ),
               ),
               Container(
-                height: 400,
+                padding: EdgeInsets.only(
+                  top: 80,
+                  left: 10,
+                  bottom: 10,
+                  right: 10,
+                ),
+                child: _tabs[currentIndex],
               ),
             ],
           ),
