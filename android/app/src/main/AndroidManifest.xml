@@ -2,7 +2,7 @@
     package="com.sejahtera.my">
    <application
         android:label="covid"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
