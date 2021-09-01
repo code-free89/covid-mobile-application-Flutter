@@ -1,6 +1,7 @@
 import 'package:covid/components/profile/certificate.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class CertificatedWidget extends StatefulWidget {
   final Map<String, dynamic> userData;
