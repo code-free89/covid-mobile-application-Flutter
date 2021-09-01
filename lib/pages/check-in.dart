@@ -4,6 +4,7 @@ import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class CheckInPage extends StatefulWidget {
   const CheckInPage({Key? key}) : super(key: key);
@@ -95,7 +96,12 @@ class _CheckInPageState extends State<CheckInPage> {
                 height: 60,
                 width: MediaQuery.of(context).size.width,
                 child: Button(
-                  onPressed: () {},
+                  onPressed: () async {
+                    String barcodeScanRes;
+                    barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+                        "#ff6666", "Cancel", true, ScanMode.QR);
+                    print(barcodeScanRes);
+                  },
                   label: "Check-in",
                 ),
               ),

@@ -1,5 +1,7 @@
 import 'package:covid/components/textbox.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class QRWidget extends StatefulWidget {
   final Function onTap;
@@ -10,6 +12,13 @@ class QRWidget extends StatefulWidget {
 }
 
 class _QRWidgetState extends State<QRWidget> {
+  String uid = "";
+  @override
+  void initState() {
+    uid = FirebaseAuth.instance.currentUser!.uid;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,11 +29,12 @@ class _QRWidgetState extends State<QRWidget> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
           ),
-          padding: EdgeInsets.symmetric(vertical: 20),
+          padding: EdgeInsets.symmetric(vertical: 10),
           child: Center(
-            child: Image(
-              image: AssetImage("assets/images/qr-medium.png"),
-              width: 200,
+            child: QrImage(
+              data: "https://mysejahtera.com/vaccination?uid=$uid",
+              size: 200,
+              version: 7,
             ),
           ),
         ),

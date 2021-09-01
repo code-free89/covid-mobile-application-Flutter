@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sejahtera.my">
    <application
-        android:label="covid"
+        android:label="MySejahtera"
         android:icon="@mipmap/icon">
         <activity
             android:name=".MainActivity"
