@@ -89,7 +89,9 @@ class _VaccinationStatusState extends State<VaccinationStatus> {
                     oppositeContentsBuilder: (context, index) => Padding(
                       padding: EdgeInsets.only(top: 5, right: 10),
                       child: TextBox(
-                        value: vaccinationSteps[index]["date"],
+                        value: index < 4
+                            ? userData["dose1_date"].toString().substring(0, 6)
+                            : userData["dose2_date"].toString().substring(0, 6),
                         fontSize: 13,
                         fontColor: Colors.black87,
                       ),
@@ -99,9 +101,7 @@ class _VaccinationStatusState extends State<VaccinationStatus> {
                       padding: const EdgeInsets.only(
                           left: 10.0, top: 18, bottom: 15),
                       child: TextBox(
-                        value: index < 4
-                            ? userData["dose1"].toString().substring(0, 4)
-                            : userData["dose2"].toString().substring(0, 4),
+                        value: vaccinationSteps[index]["value"],
                         fontSize: 15,
                         fontWeight: index == vaccinationSteps.length - 1
                             ? FontWeight.w500
