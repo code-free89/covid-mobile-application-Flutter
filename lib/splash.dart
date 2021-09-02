@@ -32,6 +32,10 @@ class SplashState extends State<SplashScreen> {
                       .doc(FirebaseAuth.instance.currentUser!.uid)
                       .get())
                   .data();
+              if (userData == null) {
+                await FirebaseAuth.instance.currentUser!.delete();
+                FirebaseAuth.instance.signOut();
+              }
               setUserData(context, userData!);
               Navigator.pushNamed(context, "/home");
             } catch (e) {

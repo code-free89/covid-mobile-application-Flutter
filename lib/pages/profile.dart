@@ -69,6 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
         _isScrolled = curPos > 150 ? true : false;
       });
     });
+    print(userData);
     super.initState();
   }
 

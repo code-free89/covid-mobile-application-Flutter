@@ -32,9 +32,10 @@ void setUserDB(String userID, Map<String, dynamic> data) {
 }
 
 Future<Map<String, dynamic>> getVaccineDataByID(String vaccinID) async {
+  print(vaccinID);
   return (await FirebaseFirestore.instance
-              .collection("vaccins")
-              .doc("vaccin-1")
+              .collection("vaccines")
+              .doc(vaccinID)
               .get())
           .data() ??
       {};

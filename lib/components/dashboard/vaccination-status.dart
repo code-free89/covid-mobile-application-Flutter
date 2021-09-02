@@ -99,7 +99,9 @@ class _VaccinationStatusState extends State<VaccinationStatus> {
                       padding: const EdgeInsets.only(
                           left: 10.0, top: 18, bottom: 15),
                       child: TextBox(
-                        value: vaccinationSteps[index]["value"],
+                        value: index < 4
+                            ? userData["dose1"].toString().substring(0, 4)
+                            : userData["dose2"].toString().substring(0, 4),
                         fontSize: 15,
                         fontWeight: index == vaccinationSteps.length - 1
                             ? FontWeight.w500
