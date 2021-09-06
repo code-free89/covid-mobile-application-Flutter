@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
           type: BottomNavigationBarType.fixed,
           selectedFontSize: 12,
           backgroundColor: Colors.white,
+          elevation: 0,
           showSelectedLabels: true,
           showUnselectedLabels: true,
           items: [

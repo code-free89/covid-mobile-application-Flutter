@@ -1,10 +1,13 @@
 import 'package:covid/components/button.dart';
 import 'package:covid/components/textbox.dart';
+import 'package:covid/pages/check-out.dart';
+import 'package:covid/providers/authProvider.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:provider/provider.dart';
 
 class CheckInPage extends StatefulWidget {
   const CheckInPage({Key? key}) : super(key: key);
@@ -16,7 +19,7 @@ class CheckInPage extends StatefulWidget {
 class _CheckInPageState extends State<CheckInPage> {
   bool _isScrolled = false;
   final ScrollController _scrollController = new ScrollController();
-  var userData;
+  late Map<String, dynamic> userData;
 
   @override
   void initState() {
@@ -26,7 +29,6 @@ class _CheckInPageState extends State<CheckInPage> {
         _isScrolled = curPos > 150 ? true : false;
       });
     });
-    userData = getUserData(context);
     super.initState();
   }
 
@@ -38,6 +40,8 @@ class _CheckInPageState extends State<CheckInPage> {
 
   @override
   Widget build(BuildContext context) {
+    userData = getUserData(context);
+    print(userData);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 42,
@@ -54,103 +58,258 @@ class _CheckInPageState extends State<CheckInPage> {
         leadingWidth: 0,
         shadowColor: Colors.transparent,
         actions: [
-          TextButton(
-            onPressed: () {},
-            child: TextBox(
-              value: "History",
-              fontColor: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          )
+          Row(
+            children: [
+              Icon(
+                Icons.autorenew,
+                size: 23,
+              ),
+              TextButton(
+                onPressed: () {},
+                child: TextBox(
+                  value: "Refresh Status",
+                  fontColor: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
       body: Container(
         decoration: BoxDecoration(color: Color(0xFFEEEEEE)),
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppStyles.primaryColor,
-                ),
-                height: 220,
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black12,
-                    ),
-                  ),
-                ),
-                padding: EdgeInsets.all(10),
-                height: 60,
-                width: MediaQuery.of(context).size.width,
-                child: Button(
-                  onPressed: () async {
-                    String barcodeScanRes;
-                    barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-                        "#ff6666", "Cancel", true, ScanMode.QR);
-                    print(barcodeScanRes);
-                  },
-                  label: "Check-in",
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 40),
-              child: Column(
-                children: [
-                  Image(
-                    image: AssetImage("assets/images/logo-checkin.png"),
-                    width: 120,
-                  ),
-                  SizedBox(height: 25),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(15),
-                      child: Column(
-                        children: [
-                          TextBox(
-                            value: userData["name"],
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            padding: 10,
-                          ),
-                          TextBox(
-                            value: "Low Risk No Symptom",
-                            fontSize: 15,
-                            padding: 5,
-                          ),
-                          TextBox(
-                            value: userData["phoneNumber"],
-                            fontSize: 15,
-                            fontColor: Colors.black54,
-                          ),
-                          Divider(),
-                          SvgPicture.asset("assets/images/checkin.svg",
-                              width: 200),
-                        ],
+        child: SingleChildScrollView(
+          child: userData.isNotEmpty
+              ? Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        color: AppStyles.primaryColor,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(
+                              "assets/images/logoMy.svg",
+                              width: 120,
+                              height: 120,
+                            ),
+                            SizedBox(height: 20),
+                            TextBox(
+                              value: userData["name"].toString().toUpperCase(),
+                              fontColor: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              padding: 10,
+                            ),
+                            TextBox(
+                              value: userData["passportNo"],
+                              fontColor: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Card(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.blue[300],
+                                ),
+                                width: double.infinity,
+                                padding: EdgeInsets.all(15),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/images/Covid19RiskStatusWhite.svg",
+                                      width: 35,
+                                      height: 35,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextBox(
+                                          value: "COVID-19 Risk Status",
+                                          fontColor: Colors.white,
+                                          fontSize: 14,
+                                          padding: 10,
+                                        ),
+                                        TextBox(
+                                          value: "Low Risk No Symptom",
+                                          fontWeight: FontWeight.w500,
+                                          fontColor: Colors.white,
+                                          fontSize: 17,
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Card(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Color(0xFFFDD774),
+                                ),
+                                width: double.infinity,
+                                padding: EdgeInsets.all(15),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/images/Covid19ImmunizationStatus.svg",
+                                      width: 33,
+                                      height: 33,
+                                    ),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextBox(
+                                          value: "COVID-19 Vaccination Status",
+                                          fontSize: 14,
+                                          padding: 10,
+                                        ),
+                                        TextBox(
+                                          value: "Fully Vaccinated",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 17,
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            userData["last_checkin"] != null &&
+                                    userData["last_checkin"] != ""
+                                ? Card(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      width: double.infinity,
+                                      padding: EdgeInsets.all(15),
+                                      child: Stack(
+                                        children: [
+                                          Positioned(
+                                            right: 0,
+                                            child: TextBox(
+                                              value: "History",
+                                              fontColor: AppStyles.primaryColor,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          Positioned(
+                                            right: 0,
+                                            bottom: 0,
+                                            child: TextBox(
+                                              value: "Checked-out",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                "assets/images/shopPop.svg",
+                                                width: 58,
+                                                height: 58,
+                                              ),
+                                              SizedBox(
+                                                width: 15,
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  TextBox(
+                                                    value: "Last Check-in",
+                                                    fontSize: 11,
+                                                  ),
+                                                  TextBox(
+                                                    value: userData["address"],
+                                                    fontSize: 18,
+                                                    padding: 5,
+                                                  ),
+                                                  TextBox(
+                                                    value: userData[
+                                                        "last_checkin"],
+                                                    fontSize: 12,
+                                                    fontColor: Colors.black54,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                )
+              : Container(),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(
+              color: Colors.black12,
             ),
-          ],
+          ),
+        ),
+        padding: EdgeInsets.all(10),
+        height: 60,
+        width: MediaQuery.of(context).size.width,
+        child: Button(
+          onPressed: () async {
+            String barcodeScanRes;
+            barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+                "#ff6666", "Cancel", true, ScanMode.QR);
+            if (barcodeScanRes.contains("qrscan")) {
+              int startIndex = barcodeScanRes.indexOf("ln=") + 3;
+              int endIndex = barcodeScanRes.indexOf("&eln=");
+              String location = barcodeScanRes.substring(startIndex, endIndex);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CheckOutPage(
+                    location: location,
+                  ),
+                ),
+              );
+            }
+          },
+          label: "Check-in",
         ),
       ),
     );

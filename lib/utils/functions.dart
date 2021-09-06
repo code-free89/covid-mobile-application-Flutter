@@ -20,19 +20,29 @@ void showToast(String msg) {
 }
 
 Map<String, dynamic> getUserData(BuildContext context) {
-  return Provider.of<AuthProvider>(context, listen: false).userData.toJson();
+  return Provider.of<AuthProvider>(context, listen: true).userData.toJson();
 }
 
 void setUserData(BuildContext context, Map<String, dynamic> value) {
-  Provider.of<AuthProvider>(context, listen: false).userData.fromJson(value);
+  UserData data = UserData();
+  data.fromJson(value);
+  Provider.of<AuthProvider>(context, listen: false).userData = data;
 }
 
 void setUserDB(String userID, Map<String, dynamic> data) {
   FirebaseFirestore.instance.collection("users").doc(userID).set(data);
 }
 
+Future<Map<String, dynamic>> getUserDB(
+    BuildContext context, String userID) async {
+  Map<String, dynamic> userData =
+      (await FirebaseFirestore.instance.collection("users").doc(userID).get())
+              .data() ??
+          {};
+  return userData;
+}
+
 Future<Map<String, dynamic>> getVaccineDataByID(String vaccinID) async {
-  print(vaccinID);
   return (await FirebaseFirestore.instance
               .collection("vaccines")
               .doc(vaccinID)
