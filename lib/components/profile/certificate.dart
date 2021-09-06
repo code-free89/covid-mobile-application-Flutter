@@ -5,12 +5,14 @@ class CertificatCard extends StatefulWidget {
   final String title;
   final String date;
   final String manufacturer;
+  final String facility;
   final String batch;
   final bool isBorder;
   const CertificatCard(
       {this.title = "",
       this.date = "",
       this.manufacturer = "",
+      this.facility = "",
       this.batch = "",
       this.isBorder = false,
       Key? key})
@@ -26,14 +28,8 @@ class _CertificatCardState extends State<CertificatCard> {
     return Container(
       padding: EdgeInsets.only(left: 10, right: 5, top: 10, bottom: 10),
       decoration: BoxDecoration(
-        border: widget.isBorder
-            ? Border(
-                left: BorderSide(
-                  color: Colors.white,
-                  width: 1.5,
-                ),
-              )
-            : Border(),
+        color: Color(0xFFFCE6AC),
+        borderRadius: BorderRadius.circular(5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,19 +57,17 @@ class _CertificatCardState extends State<CertificatCard> {
             lineHeight: 1.2,
             padding: 5,
           ),
-          Row(
-            children: [
-              TextBox(
-                value: "Batch: ",
-                fontSize: 14,
-                fontColor: Colors.black45,
-              ),
-              TextBox(
-                value: widget.batch,
-                fontSize: 14,
-                fontColor: Colors.black45,
-              ),
-            ],
+          TextBox(
+            value: "Facility: ${widget.facility}",
+            fontSize: 14,
+            fontColor: Colors.black45,
+            lineHeight: 1.2,
+            padding: 5,
+          ),
+          TextBox(
+            value: "Batch: ${widget.batch}",
+            fontSize: 14,
+            fontColor: Colors.black45,
           ),
         ],
       ),

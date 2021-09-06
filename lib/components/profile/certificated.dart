@@ -35,35 +35,23 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
         TextBox(
           value: widget.userData["passportNo"],
           fontSize: 20,
-          padding: 30,
+          padding: 10,
         ),
-        TextBox(
-          value: widget.userData["address"],
-          fontSize: 20,
-          padding: 30,
+        CertificatCard(
+          title: "Dose 1: ",
+          date: widget.userData["dose1_date"] ?? "",
+          manufacturer: widget.dose1Data["manufacturer"] ?? "",
+          facility: widget.dose1Data["facility"] ?? "",
+          batch: widget.dose1Data["batch"] ?? "",
         ),
-        Row(
-          children: [
-            Flexible(
-              flex: 1,
-              child: CertificatCard(
-                title: "Dose 1: ",
-                date: widget.userData["dose1_date"] ?? "",
-                manufacturer: widget.dose1Data["manufacturer"] ?? "",
-                batch: widget.dose1Data["batch"] ?? "",
-              ),
-            ),
-            Flexible(
-              flex: 1,
-              child: CertificatCard(
-                title: "Dose 2: ",
-                date: widget.userData["dose2_date"] ?? "",
-                manufacturer: widget.dose2Data["manufacturer"] ?? "",
-                batch: widget.dose2Data["batch"] ?? "",
-                isBorder: true,
-              ),
-            ),
-          ],
+        SizedBox(height: 15),
+        CertificatCard(
+          title: "Dose 2: ",
+          date: widget.userData["dose2_date"] ?? "",
+          manufacturer: widget.dose2Data["manufacturer"] ?? "",
+          batch: widget.dose2Data["batch"] ?? "",
+          facility: widget.dose1Data["facility"] ?? "",
+          isBorder: true,
         ),
         Container(
           margin: EdgeInsets.only(top: 10),

@@ -18,6 +18,7 @@ class UserData {
   String dose1_date;
   String dose2_date;
   String last_checkin;
+  String last_checkin_address;
 
   UserData({
     this.email = "",
@@ -37,26 +38,28 @@ class UserData {
     this.dose1_date = "",
     this.dose2_date = "",
     this.last_checkin = "",
+    this.last_checkin_address = "",
   });
 
   void fromJson(Map<String, dynamic> json) {
-    this.email = json["email"];
-    this.name = json["name"];
-    this.phoneNumber = json["phoneNumber"];
-    this.passportNo = json["passportNo"];
-    this.age = json["age"];
-    this.gender = json["gender"];
-    this.ethnity = json["ethnity"];
-    this.address = json["address"];
-    this.postcode = json["postcode"];
-    this.state = json["state"];
-    this.isVerified = json["isVerified"];
-    this.isFirstTimeLogin = json["isFirstTimeLogin"];
-    this.dose1 = json["dose1"];
-    this.dose1_date = json["dose1_date"];
-    this.dose2 = json["dose2"];
-    this.dose2_date = json["dose2_date"];
-    this.last_checkin = json["last_checkin"];
+    this.email = json["email"] ?? "";
+    this.name = json["name"] ?? "";
+    this.phoneNumber = json["phoneNumber"] ?? "";
+    this.passportNo = json["passportNo"] ?? "";
+    this.age = json["age"] ?? "";
+    this.gender = json["gender"] ?? "";
+    this.ethnity = json["ethnity"] ?? "";
+    this.address = json["address"] ?? "";
+    this.postcode = json["postcode"] ?? "";
+    this.state = json["state"] ?? "";
+    this.isVerified = json["isVerified"] ?? "";
+    this.isFirstTimeLogin = json["isFirstTimeLogin"] ?? "";
+    this.dose1 = json["dose1"] ?? "";
+    this.dose1_date = json["dose1_date"] ?? "";
+    this.dose2 = json["dose2"] ?? "";
+    this.dose2_date = json["dose2_date"] ?? "";
+    this.last_checkin = json["last_checkin"] ?? "";
+    this.last_checkin_address = json["last_checkin_address"] ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -78,6 +81,7 @@ class UserData {
       "dose2": this.dose2,
       "dose2_date": this.dose2_date,
       "last_checkin": this.last_checkin,
+      "last_checkin_address": this.last_checkin_address,
     };
   }
 }

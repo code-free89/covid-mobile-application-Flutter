@@ -34,8 +34,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> userData =
-        Provider.of<AuthProvider>(context).userData.toJson();
+    Map<String, dynamic> userData = getUserData(context);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 45,
@@ -114,7 +113,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               TextBox(
-                                value: "Terima Kashi",
+                                value: "Terima Kasih",
                                 fontSize: 23,
                                 fontWeight: FontWeight.w500,
                                 fontColor: Colors.white,
@@ -340,6 +339,20 @@ class _CheckOutPageState extends State<CheckOutPage> {
                   ],
                 ),
               ),
+              Positioned(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/images/in.svg",
+                        width: 75,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -359,6 +372,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
         child: Button(
           onPressed: () async {
             userData["last_checkin"] = "$date, $time";
+            userData["last_checkin_address"] = location;
             setUserDB(FirebaseAuth.instance.currentUser!.uid, userData);
             userData = await getUserDB(
                 context, FirebaseAuth.instance.currentUser!.uid);

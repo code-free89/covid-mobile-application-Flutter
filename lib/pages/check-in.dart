@@ -40,8 +40,8 @@ class _CheckInPageState extends State<CheckInPage> {
 
   @override
   Widget build(BuildContext context) {
-    userData = getUserData(context);
-    print(userData);
+    userData =
+        Provider.of<AuthProvider>(context, listen: true).userData.toJson();
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 42,
@@ -250,7 +250,8 @@ class _CheckInPageState extends State<CheckInPage> {
                                                     fontSize: 11,
                                                   ),
                                                   TextBox(
-                                                    value: userData["address"],
+                                                    value: userData[
+                                                        "last_checkin_address"],
                                                     fontSize: 18,
                                                     padding: 5,
                                                   ),

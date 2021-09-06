@@ -20,7 +20,7 @@ void showToast(String msg) {
 }
 
 Map<String, dynamic> getUserData(BuildContext context) {
-  return Provider.of<AuthProvider>(context, listen: true).userData.toJson();
+  return Provider.of<AuthProvider>(context, listen: false).userData.toJson();
 }
 
 void setUserData(BuildContext context, Map<String, dynamic> value) {
@@ -52,7 +52,10 @@ Future<Map<String, dynamic>> getVaccineDataByID(String vaccinID) async {
 }
 
 Future<List<Map<String, dynamic>>> getNews() async {
-  return (await FirebaseFirestore.instance.collection("news").get())
+  return (await FirebaseFirestore.instance
+          .collection("news")
+          .orderBy("timestamp")
+          .get())
       .docs
       .map((e) => e.data())
       .toList();
