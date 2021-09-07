@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:covid/components/profile/status-card.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/providers/authProvider.dart';
+import 'package:covid/utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class StatusCard extends StatefulWidget {
   const StatusCard({Key? key}) : super(key: key);
@@ -14,6 +18,7 @@ class StatusCard extends StatefulWidget {
 class _StatusCardState extends State<StatusCard> {
   @override
   Widget build(BuildContext context) {
+    print(json.encode(getUserData(context)));
     return Card(
       child: Column(
         children: [
@@ -30,10 +35,9 @@ class _StatusCardState extends State<StatusCard> {
           Image(image: AssetImage("assets/images/LowRiskNoSymptoms.png")),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10),
-            child: Image(
-              image: AssetImage('assets/images/sampleQRCode.png'),
-              fit: BoxFit.fill,
-              height: 260,
+            child: QrImage(
+              data: json.encode(getUserData(context)),
+              size: 260,
             ),
           ),
           Container(

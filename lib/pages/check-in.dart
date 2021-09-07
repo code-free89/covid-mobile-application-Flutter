@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:covid/components/button.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/pages/check-out.dart';
+import 'package:covid/pages/qr-result.dart';
 import 'package:covid/providers/authProvider.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
@@ -8,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CheckInPage extends StatefulWidget {
   const CheckInPage({Key? key}) : super(key: key);
@@ -296,6 +300,7 @@ class _CheckInPageState extends State<CheckInPage> {
             String barcodeScanRes;
             barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
                 "#ff6666", "Cancel", true, ScanMode.QR);
+            print(barcodeScanRes);
             if (barcodeScanRes.contains("qrscan")) {
               int startIndex = barcodeScanRes.indexOf("ln=") + 3;
               int endIndex = barcodeScanRes.indexOf("&eln=");
@@ -305,6 +310,17 @@ class _CheckInPageState extends State<CheckInPage> {
                 MaterialPageRoute(
                   builder: (context) => CheckOutPage(
                     location: location,
+                  ),
+                ),
+              );
+            } else if (barcodeScanRes.contains("https://mysejahtera.com")) {
+              launch(barcodeScanRes);
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QRScanResultPage(
+                    barCodeResult: barcodeScanRes,
                   ),
                 ),
               );

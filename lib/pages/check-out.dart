@@ -224,7 +224,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   TextBox(
-                                    value: "No. Telefon",
+                                    value: "Masa",
                                     fontSize: 11,
                                     fontColor: Colors.black54,
                                   ),
