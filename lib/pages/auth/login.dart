@@ -59,9 +59,6 @@ class _LogInState extends State<LogIn> {
           return;
         } else {
           try {
-            var userData = getUserData(context);
-            userData["phoneNumber"] = phoneNumber;
-            setUserData(context, userData);
             await FirebaseAuth.instance.verifyPhoneNumber(
               phoneNumber: phoneNumber,
               verificationCompleted: (PhoneAuthCredential user) {

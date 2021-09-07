@@ -86,9 +86,10 @@ class _RegisterState extends State<Register> {
           return;
         }
         try {
-          UserCredential user = await FirebaseAuth.instance
+          await FirebaseAuth.instance
               .signInWithEmailAndPassword(email: email, password: "123456");
-          if (!user.user!.emailVerified) await user.user!.delete();
+          await FirebaseAuth.instance.currentUser!.delete();
+          await FirebaseAuth.instance.signOut();
         } catch (e) {
           print(e);
         }

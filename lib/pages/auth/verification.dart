@@ -7,6 +7,7 @@ import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Verification extends StatefulWidget {
   final String verificationId;
@@ -93,41 +94,54 @@ class _VerificationState extends State<Verification> {
         showToast("Your OTP code is expired");
       } else {
         try {
-          print(otpController.value.text);
           PhoneAuthCredential _credential = PhoneAuthProvider.credential(
               verificationId: verificationId,
               smsCode: otpController.value.text);
           if (widget.verifyType == "login" || widget.verifyType == "register")
             await FirebaseAuth.instance.signInWithCredential(_credential);
           User? user = FirebaseAuth.instance.currentUser;
-          print("current user: $user");
           if (user != null) {
             if (widget.verifyType == "login") {
-              setUserData(
-                context,
-                (await FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(user.uid)
-                            .get())
-                        .data() ??
-                    {},
-              );
-              var userData = getUserData(context);
-              print(userData);
-              if (userData["isFirstTimeLogin"] == true)
-                Navigator.pushNamed(context, "/question");
-              else
-                Navigator.pushNamed(context, "/home");
+              if (user.email == "") {
+                showToast("This phone number is not registered.");
+                await FirebaseAuth.instance.currentUser!.delete();
+                await FirebaseAuth.instance.signOut();
+                Navigator.pop(context);
+              } else {
+                setUserData(
+                  context,
+                  (await FirebaseFirestore.instance
+                              .collection("users")
+                              .doc(user.uid)
+                              .get())
+                          .data() ??
+                      {},
+                );
+                var userData = getUserData(context);
+                print(userData);
+                if (userData["isFirstTimeLogin"] == true)
+                  Navigator.pushNamed(context, "/question");
+                else
+                  Navigator.pushNamed(context, "/home");
+              }
             } else if (widget.verifyType == "register") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SetupProfile1(
-                    phone: FirebaseAuth.instance.currentUser!.phoneNumber ?? "",
-                    setupType: "phone",
+              if (user.email != "") {
+                showToast("This phone number is already registered.");
+                await FirebaseAuth.instance.currentUser!.delete();
+                await FirebaseAuth.instance.signOut();
+                Navigator.pop(context);
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SetupProfile1(
+                      phone:
+                          FirebaseAuth.instance.currentUser!.phoneNumber ?? "",
+                      setupType: "phone",
+                    ),
                   ),
-                ),
-              );
+                );
+              }
             } else {
               user.updatePhoneNumber(_credential);
               Navigator.pushNamed(context, "/setupProfile2");

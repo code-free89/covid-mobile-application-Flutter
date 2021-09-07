@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:covid/pages/auth/email_verification.dart';
+import 'package:covid/pages/auth/profile/step1.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,20 +28,54 @@ class SplashState extends State<SplashScreen> {
         if (isFirebaseConnected == true) {
           _timer.cancel();
           if (FirebaseAuth.instance.currentUser != null) {
-            try {
-              var userData = (await FirebaseFirestore.instance
-                      .collection("users")
-                      .doc(FirebaseAuth.instance.currentUser!.uid)
-                      .get())
-                  .data();
-              if (userData == null) {
+            User? currentUser = FirebaseAuth.instance.currentUser;
+            print("-------------- $currentUser");
+            if (currentUser!.email != null && currentUser.phoneNumber != null) {
+              try {
+                var userData = (await FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .get())
+                    .data();
+                if (userData == null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SetupProfile1(
+                        setupType: "email",
+                        email: currentUser.email ?? "",
+                      ),
+                    ),
+                  );
+                } else {
+                  setUserData(context, userData);
+                  Navigator.pushNamed(context, "/home");
+                }
+              } catch (e) {
                 await FirebaseAuth.instance.currentUser!.delete();
-                FirebaseAuth.instance.signOut();
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushNamed(context, "/login");
               }
-              setUserData(context, userData!);
-              Navigator.pushNamed(context, "/home");
-            } catch (e) {
-              print(e);
+            } else if (currentUser.email != null &&
+                currentUser.phoneNumber == null) {
+              await FirebaseAuth.instance.currentUser!.delete();
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushNamed(context, "/login");
+            } else if (currentUser.email == null &&
+                currentUser.phoneNumber != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SetupProfile1(
+                    setupType: "phone",
+                    phone: currentUser.phoneNumber ?? "",
+                  ),
+                ),
+              );
+            } else {
+              await FirebaseAuth.instance.currentUser!.delete();
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushNamed(context, "/login");
             }
           } else
             Navigator.popAndPushNamed(context, '/start');
