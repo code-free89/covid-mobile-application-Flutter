@@ -49,7 +49,8 @@ class _QRWidgetState extends State<QRWidget> {
               ),
               Center(
                 child: QrImage(
-                  data: "https://mysejahtera.com/vaccination?uid=$uid",
+                  data:
+                      "https://sejahtera-bea87.web.app/digital-certificate/$uid/1",
                   size: 120,
                   version: 13,
                 ),
@@ -74,7 +75,8 @@ class _QRWidgetState extends State<QRWidget> {
               ),
               Center(
                 child: QrImage(
-                  data: "https://mysejahtera.com/vaccination?uid=$uid",
+                  data:
+                      "https://sejahtera-bea87.web.app/digital-certificate/$uid/2",
                   size: 120,
                   version: 13,
                 ),

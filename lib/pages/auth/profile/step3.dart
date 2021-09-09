@@ -40,6 +40,9 @@ class _SetupProfile3State extends State<SetupProfile3> {
           Navigator.pushNamed(context, "/profileSuccess");
         } catch (e) {
           print(e);
+          FirebaseAuth.instance.currentUser!.delete();
+          FirebaseAuth.instance.signOut();
+          Navigator.pushNamed(context, "/login");
         }
       }
     }

@@ -253,11 +253,16 @@ class _CheckInPageState extends State<CheckInPage> {
                                                     value: "Last Check-in",
                                                     fontSize: 11,
                                                   ),
-                                                  TextBox(
-                                                    value: userData[
-                                                        "last_checkin_address"],
-                                                    fontSize: 18,
-                                                    padding: 5,
+                                                  Container(
+                                                    width: 200,
+                                                    child: TextBox(
+                                                      value: userData[
+                                                              "last_checkin_address"]
+                                                          .toString()
+                                                          .replaceAll("_", " "),
+                                                      fontSize: 18,
+                                                      padding: 5,
+                                                    ),
                                                   ),
                                                   TextBox(
                                                     value: userData[
@@ -303,7 +308,7 @@ class _CheckInPageState extends State<CheckInPage> {
             print(barcodeScanRes);
             if (barcodeScanRes.contains("qrscan")) {
               int startIndex = barcodeScanRes.indexOf("ln=") + 3;
-              int endIndex = barcodeScanRes.indexOf("&eln=");
+              int endIndex = barcodeScanRes.indexOf('&', startIndex);
               String location = barcodeScanRes.substring(startIndex, endIndex);
               Navigator.push(
                 context,
@@ -314,6 +319,8 @@ class _CheckInPageState extends State<CheckInPage> {
                 ),
               );
             } else if (barcodeScanRes.contains("https://mysejahtera.com")) {
+              launch(barcodeScanRes);
+            } else if (barcodeScanRes.contains("digital-certificate")) {
               launch(barcodeScanRes);
             } else {
               Navigator.push(

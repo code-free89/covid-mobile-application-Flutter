@@ -125,6 +125,7 @@ class _VerificationState extends State<Verification> {
                   Navigator.pushNamed(context, "/home");
               }
             } else if (widget.verifyType == "register") {
+              print(user);
               if (user.email != "") {
                 showToast("This phone number is already registered.");
                 await FirebaseAuth.instance.currentUser!.delete();
