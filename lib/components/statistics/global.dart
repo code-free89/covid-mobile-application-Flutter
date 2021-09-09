@@ -29,7 +29,8 @@ class _StatisticsGlobalState extends State<StatisticsGlobal> {
                 title: "Kes Keseluruhan Dunia (World Confirmed Cases)",
                 date: updateData["date"],
                 value: double.parse(updateData["confirmedCases"].toString()),
-                todayValue: updateData["todayConfirmedCases"],
+                todayValue:
+                    int.parse(updateData["todayConfirmedCases"].toString()),
               ),
               StatisticCard(
                 cardType: "integer",
@@ -38,7 +39,8 @@ class _StatisticsGlobalState extends State<StatisticsGlobal> {
                 title: "Kes Sembuh Dunia (World Recoverd Cases)",
                 date: updateData["date"],
                 value: double.parse(updateData["recoveredCases"].toString()),
-                todayValue: updateData["todayRecoveredCases"],
+                todayValue:
+                    int.parse(updateData["todayRecoveredCases"].toString()),
               ),
               StatisticCard(
                 cardType: "integer",
@@ -47,7 +49,7 @@ class _StatisticsGlobalState extends State<StatisticsGlobal> {
                 title: "Kes Kematian Dunia (World Deaths)",
                 date: updateData["date"],
                 value: double.parse(updateData["death"].toString()),
-                todayValue: updateData["todayDeath"],
+                todayValue: int.parse(updateData["todayDeath"].toString()),
               ),
               StatisticCard(
                 cardType: "integer",
@@ -56,7 +58,8 @@ class _StatisticsGlobalState extends State<StatisticsGlobal> {
                 title: "Kes Aktif (Active Cases)",
                 date: updateData["date"],
                 value: double.parse(updateData["activeCases"].toString()),
-                todayValue: updateData["todayActiveCases"],
+                todayValue:
+                    int.parse(updateData["todayActiveCases"].toString()),
               ),
               StatisticCard(
                 cardType: "image",

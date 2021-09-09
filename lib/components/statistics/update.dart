@@ -19,6 +19,7 @@ class _StatisticUpdateState extends State<StatisticUpdate> {
 
   @override
   Widget build(BuildContext context) {
+    print(updateData);
     return updateData.isNotEmpty
         ? Column(
             children: [
@@ -37,7 +38,8 @@ class _StatisticUpdateState extends State<StatisticUpdate> {
                 title: "Jumlah Kes Keseluruhan (Total Confirmed Cases)",
                 date: updateData["date"],
                 value: double.parse(updateData["confirmCase"].toString()),
-                todayValue: updateData["todayConfirmCases"],
+                todayValue:
+                    int.parse(updateData["todayConfirmCases"].toString()),
               ),
               StatisticCard(
                 cardType: "integer",
@@ -46,7 +48,7 @@ class _StatisticUpdateState extends State<StatisticUpdate> {
                 title: "Jumlah Kes Sembuh (Total Recoverd)",
                 date: updateData["date"],
                 value: double.parse(updateData["recovered"].toString()),
-                todayValue: updateData["todayRecovered"],
+                todayValue: int.parse(updateData["todayRecovered"].toString()),
               ),
               StatisticCard(
                 cardType: "integer",
@@ -55,7 +57,7 @@ class _StatisticUpdateState extends State<StatisticUpdate> {
                 title: "Jumlah Kematian (Total Death)",
                 date: updateData["date"],
                 value: double.parse(updateData["death"].toString()),
-                todayValue: updateData["todayDeath"],
+                todayValue: int.parse(updateData["todayDeath"].toString()),
               ),
               StatisticCard(
                 cardType: "integer",
@@ -64,7 +66,8 @@ class _StatisticUpdateState extends State<StatisticUpdate> {
                 title: "Kes Aktif (Active Cases)",
                 date: updateData["date"],
                 value: double.parse(updateData["activeCase"].toString()),
-                todayValue: updateData["todayActiveCases"],
+                todayValue:
+                    int.parse(updateData["todayActiveCases"].toString()),
               ),
               StatisticCard(
                 cardType: "image",
@@ -73,7 +76,8 @@ class _StatisticUpdateState extends State<StatisticUpdate> {
                 title: "Statistik Migguan (Weekly Statistics)",
                 date: updateData["date"],
                 value: double.parse(updateData["activeCase"].toString()),
-                todayValue: updateData["todayActiveCases"],
+                todayValue:
+                    int.parse(updateData["todayActiveCases"].toString()),
                 imgSrc: updateData["weeklyStatistics"],
               ),
               StatisticCard(
@@ -83,7 +87,8 @@ class _StatisticUpdateState extends State<StatisticUpdate> {
                 title: "Trend Kes Aktif (Active Cases Trend)",
                 date: updateData["date"],
                 value: double.parse(updateData["activeCase"].toString()),
-                todayValue: updateData["todayActiveCases"],
+                todayValue:
+                    int.parse(updateData["todayActiveCases"].toString()),
                 imgSrc: updateData["activeCaseTrend"],
               ),
               StatisticCard(
@@ -93,7 +98,8 @@ class _StatisticUpdateState extends State<StatisticUpdate> {
                 title: "Trend Mingguan COVID-19 (Weekly trend of COVID-19)",
                 date: updateData["date"],
                 value: double.parse(updateData["activeCase"].toString()),
-                todayValue: updateData["todayActiveCases"],
+                todayValue:
+                    int.parse(updateData["todayActiveCases"].toString()),
                 imgSrc: updateData["weeklyTrend"],
               ),
             ],
