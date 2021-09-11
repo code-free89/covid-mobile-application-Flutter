@@ -160,10 +160,12 @@ class _CheckOutPageState extends State<CheckOutPage> {
                           ),
                           Row(
                             children: [
-                              TextBox(
-                                value: location,
-                                fontSize: 14,
-                              )
+                              Expanded(
+                                child: TextBox(
+                                  value: location,
+                                  fontSize: 14,
+                                ),
+                              ),
                             ],
                           ),
                           SizedBox(height: 10),
@@ -371,11 +373,11 @@ class _CheckOutPageState extends State<CheckOutPage> {
         width: MediaQuery.of(context).size.width,
         child: Button(
           onPressed: () async {
+            userData = await getUserDB(
+                context, FirebaseAuth.instance.currentUser!.uid);
             userData["last_checkin"] = "$date, $time";
             userData["last_checkin_address"] = location;
             setUserDB(FirebaseAuth.instance.currentUser!.uid, userData);
-            userData = await getUserDB(
-                context, FirebaseAuth.instance.currentUser!.uid);
             setUserData(context, userData);
             Navigator.pop(context);
           },

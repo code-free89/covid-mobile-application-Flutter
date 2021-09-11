@@ -1,17 +1,15 @@
-import 'dart:convert';
-
 import 'package:covid/components/button.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/pages/check-out.dart';
 import 'package:covid/pages/qr-result.dart';
 import 'package:covid/providers/authProvider.dart';
-import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:convert';
 
 class CheckInPage extends StatefulWidget {
   const CheckInPage({Key? key}) : super(key: key);
@@ -307,9 +305,17 @@ class _CheckInPageState extends State<CheckInPage> {
                 "#ff6666", "Cancel", true, ScanMode.QR);
             print(barcodeScanRes);
             if (barcodeScanRes.contains("qrscan")) {
-              int startIndex = barcodeScanRes.indexOf("ln=") + 3;
-              int endIndex = barcodeScanRes.indexOf('&', startIndex);
-              String location = barcodeScanRes.substring(startIndex, endIndex);
+              String location = "";
+              if (barcodeScanRes.contains("&ln=")) {
+                int startIndex = barcodeScanRes.indexOf("ln=") + 3;
+                int endIndex = barcodeScanRes.indexOf('&', startIndex);
+                location = barcodeScanRes.substring(startIndex, endIndex);
+              } else if (barcodeScanRes.contains("&eln=")) {
+                int startIndex = barcodeScanRes.indexOf("eln=") + 4;
+                int endIndex = barcodeScanRes.indexOf('&formType', startIndex);
+                location = barcodeScanRes.substring(startIndex, endIndex);
+                location = utf8.decode(base64.decode(location.toString()));
+              }
               Navigator.push(
                 context,
                 MaterialPageRoute(
