@@ -57,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
         userData = getUserData(context);
       });
       List<String> nameArray = userData["name"].toString().split(" ");
-      for (int i = 0; i < nameArray.length; i++)
+      for (int i = 0; i < 2; i++)
         setState(() {
           name += nameArray[i][0].toUpperCase();
         });

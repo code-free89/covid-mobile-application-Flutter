@@ -49,10 +49,13 @@ class _NameCardState extends State<NameCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextBox(
-                  value: userData["name"].toString().toUpperCase(),
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+                Container(
+                  width: MediaQuery.of(context).size.width - 100,
+                  child: TextBox(
+                    value: userData["name"].toString().toUpperCase(),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 TextBox(
                   value: "Low Risk No Symptom",
