@@ -50,7 +50,7 @@ class _NameCardState extends State<NameCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width - 100,
+                  width: MediaQuery.of(context).size.width - 130,
                   child: TextBox(
                     value: userData["name"].toString().toUpperCase(),
                     fontSize: 15,
