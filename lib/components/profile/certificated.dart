@@ -50,7 +50,7 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
           date: widget.userData["dose2_date"] ?? "",
           manufacturer: widget.dose2Data["manufacturer"] ?? "",
           batch: widget.dose2Data["batch"] ?? "",
-          facility: widget.dose1Data["facility"] ?? "",
+          facility: widget.dose2Data["facility"] ?? "",
           isBorder: true,
         ),
         Container(
