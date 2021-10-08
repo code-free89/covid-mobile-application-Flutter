@@ -12,6 +12,7 @@ class TextEdit extends StatefulWidget {
   final bool readOnly;
   final int maxLength;
   final TextAlign textAlign;
+  final bool isUnderline;
   const TextEdit(
       {this.labelText = "",
       this.hintText = "",
@@ -21,6 +22,7 @@ class TextEdit extends StatefulWidget {
       this.readOnly = false,
       this.maxLength = 100,
       this.textAlign = TextAlign.start,
+      this.isUnderline = false,
       Key? key})
       : super(key: key);
 
@@ -41,7 +43,11 @@ class _TextEditState extends State<TextEdit> {
             ? [FilteringTextInputFormatter.digitsOnly]
             : [],
         decoration: InputDecoration(
-          border: OutlineInputBorder(),
+          border: widget.isUnderline
+              ? UnderlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.white),
+                )
+              : OutlineInputBorder(),
           contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 11),
           isDense: true,
           hintText: widget.hintText,

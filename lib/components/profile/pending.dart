@@ -7,6 +7,17 @@ Widget PendingWidget(
     margin: EdgeInsets.only(bottom: 20),
     child: Column(
       children: [
+        TextBox(
+          value: userData["name"],
+          fontSize: 20,
+          fontWeight: FontWeight.w500,
+          padding: 10,
+        ),
+        TextBox(
+          value: userData["passportNo"],
+          fontSize: 20,
+          padding: 10,
+        ),
         Row(
           children: [
             Flexible(
@@ -14,7 +25,7 @@ Widget PendingWidget(
               child: Container(
                 width: double.infinity,
                 child: TextBox(
-                  value: "Dose 1",
+                  value: "Dose 1:",
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
                   padding: 15,

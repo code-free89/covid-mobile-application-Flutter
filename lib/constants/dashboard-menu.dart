@@ -32,9 +32,9 @@ List<Map<String, dynamic>> dashboardMenus = [
     "title": "Helpdesk",
   },
   {
-    "icon": SvgPicture.asset("assets/images/home/Emergency.svg",
+    "icon": SvgPicture.asset("assets/images/home/Dependent.svg",
         width: 40, height: 40),
-    "title": "Emergency",
+    "title": "Manage Dependents",
   },
   {
     "icon": SvgPicture.asset("assets/images/home/HealthFacilities.svg",

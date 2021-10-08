@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:covid/pages/auth/profile/step1.dart';
 import 'package:covid/pages/auth/verification.dart';
 import 'package:covid/providers/authProvider.dart';
 import 'package:covid/utils/enums.dart';
@@ -48,8 +49,16 @@ class _LogInState extends State<LogIn> {
                 {},
           );
           var userData = getUserData(context);
-          if (userData["isFirstTimeLogin"] == true)
-            Navigator.pushNamed(context, "/question");
+          if (userData["name"] == "")
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SetupProfile1(
+                  setupType: "email",
+                  email: user.user!.email ?? "",
+                ),
+              ),
+            );
           else
             Navigator.pushNamed(context, "/home");
         }

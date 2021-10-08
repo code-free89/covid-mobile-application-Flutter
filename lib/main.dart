@@ -1,3 +1,5 @@
+import 'package:covid/components/dashboard/add-dependent.dart';
+import 'package:covid/components/dashboard/dependent.dart';
 import 'package:covid/components/dashboard/vaccination.dart';
 import 'package:covid/pages/auth/forget.dart';
 import 'package:covid/pages/auth/login.dart';
@@ -51,6 +53,8 @@ class MyApp extends StatelessWidget {
         '/question': (context) => QuesetionPage(),
         '/home': (context) => HomePage(),
         '/vaccination': (context) => VaccinationWidget(),
+        '/dependents': (context) => ManageDependent(),
+        '/addDependents': (context) => AddDependent(),
       },
     );
   }

@@ -5,13 +5,15 @@ class DropDown extends StatefulWidget {
   final List<String> items;
   final double padding;
   final Function onChange;
-  const DropDown(
-      {this.hintText = "",
-      this.padding = 10,
-      required this.items,
-      required this.onChange,
-      Key? key})
-      : super(key: key);
+  final bool isUnderline;
+  const DropDown({
+    this.hintText = "",
+    this.padding = 10,
+    required this.items,
+    required this.onChange,
+    this.isUnderline = false,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _DropDownState createState() => _DropDownState();
@@ -34,9 +36,13 @@ class _DropDownState extends State<DropDown> {
         builder: (FormFieldState<String> state) {
           return InputDecorator(
             decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
+              border: widget.isUnderline
+                  ? UnderlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.white),
+                    )
+                  : OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 10, vertical: 11),
               isDense: true,

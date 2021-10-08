@@ -7,14 +7,16 @@ class Button extends StatefulWidget {
   final double width;
   final Color color;
   final Color bgColor;
-  const Button(
-      {this.label = "",
-      this.width = double.infinity,
-      required this.onPressed,
-      this.color = Colors.white,
-      this.bgColor = AppStyles.primaryColor,
-      Key? key})
-      : super(key: key);
+  final bool shadow;
+  const Button({
+    this.label = "",
+    this.width = double.infinity,
+    required this.onPressed,
+    this.color = Colors.white,
+    this.bgColor = AppStyles.primaryColor,
+    this.shadow = true,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _ButtonState createState() => _ButtonState();
@@ -35,6 +37,8 @@ class _ButtonState extends State<Button> {
             40,
           ),
           primary: widget.bgColor,
+          shadowColor:
+              widget.shadow == false ? Colors.transparent : Colors.black,
         ),
         onPressed: () {
           widget.onPressed();

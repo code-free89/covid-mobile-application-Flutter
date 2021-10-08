@@ -57,7 +57,6 @@ class _SetupProfile1State extends State<SetupProfile1> {
           userData["passportNo"] = passportController.value.text;
           userData["age"] = int.parse(ageController.value.text);
           User? user = FirebaseAuth.instance.currentUser;
-          print(user);
 
           // All conditions are true
           if (user!.emailVerified &&

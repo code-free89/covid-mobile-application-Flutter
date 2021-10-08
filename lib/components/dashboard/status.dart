@@ -21,6 +21,9 @@ class _DashboardStatusCardState extends State<DashboardStatusCard> {
     (BuildContext context) {},
     (BuildContext context) {},
     (BuildContext context) {},
+    (BuildContext context) {
+      Navigator.pushNamed(context, "/dependents");
+    },
     (BuildContext context) {},
     (BuildContext context) {}
   ];
