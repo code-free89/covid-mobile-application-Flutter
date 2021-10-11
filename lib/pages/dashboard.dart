@@ -3,6 +3,7 @@ import 'package:covid/components/dashboard/status.dart';
 import 'package:covid/components/dashboard/tabmenu.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/constants/dashboard-menu.dart';
+import 'package:covid/models/checkin-history.dart';
 import 'package:covid/models/dependent.dart';
 import 'package:covid/providers/dataProvider.dart';
 import 'package:covid/utils/styles.dart';
@@ -48,6 +49,32 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
+  void getCheckInHistory() async {
+    List<CheckInHistoryData> historyDatas = [];
+    try {
+      final uID = FirebaseAuth.instance.currentUser!.uid;
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> documents =
+          (await FirebaseFirestore.instance
+                  .collection("checkin-history")
+                  .where("user_id", isEqualTo: uID)
+                  .get())
+              .docs;
+      List<Map<String, dynamic>> histories = [];
+      documents.forEach((element) {
+        histories.add(element.data());
+      });
+      histories.forEach((element) {
+        CheckInHistoryData historyItem = new CheckInHistoryData();
+        historyItem.fromJson(element);
+        historyDatas.add(historyItem);
+      });
+      Provider.of<DataProvider>(context, listen: false).setHistories =
+          historyDatas;
+    } catch (e) {
+      print("error => $e");
+    }
+  }
+
   @override
   void initState() {
     _scrollController.addListener(() {
@@ -57,6 +84,7 @@ class _DashboardPageState extends State<DashboardPage> {
       });
     });
     getDependents();
+    getCheckInHistory();
     super.initState();
   }
 

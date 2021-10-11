@@ -218,10 +218,17 @@ class _CheckInPageState extends State<CheckInPage> {
                                         children: [
                                           Positioned(
                                             right: 0,
-                                            child: TextBox(
-                                              value: "History",
-                                              fontColor: AppStyles.primaryColor,
-                                              fontSize: 12,
+                                            child: InkWell(
+                                              onTap: () {
+                                                Navigator.pushNamed(
+                                                    context, "/checkInHistory");
+                                              },
+                                              child: TextBox(
+                                                value: "History",
+                                                fontColor:
+                                                    AppStyles.primaryColor,
+                                                fontSize: 12,
+                                              ),
                                             ),
                                           ),
                                           Positioned(
@@ -258,7 +265,7 @@ class _CheckInPageState extends State<CheckInPage> {
                                                               "last_checkin_address"]
                                                           .toString()
                                                           .replaceAll("_", " "),
-                                                      fontSize: 18,
+                                                      fontSize: 17,
                                                       padding: 5,
                                                     ),
                                                   ),

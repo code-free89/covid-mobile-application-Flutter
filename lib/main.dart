@@ -8,6 +8,7 @@ import 'package:covid/pages/auth/profile/step3.dart';
 import 'package:covid/pages/auth/profile/success.dart';
 import 'package:covid/pages/auth/register.dart';
 import 'package:covid/pages/auth/start.dart';
+import 'package:covid/pages/checkin/history.dart';
 import 'package:covid/pages/home.dart';
 import 'package:covid/pages/question.dart';
 import 'package:covid/providers/authProvider.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
         '/vaccination': (context) => VaccinationWidget(),
         '/dependents': (context) => ManageDependent(),
         '/addDependents': (context) => AddDependent(),
+        '/checkInHistory': (context) => CheckInHistoryPage(),
       },
     );
   }

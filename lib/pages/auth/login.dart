@@ -59,8 +59,20 @@ class _LogInState extends State<LogIn> {
                 ),
               ),
             );
-          else
+          else {
+            final uID = FirebaseAuth.instance.currentUser!.uid;
+
+            List<QueryDocumentSnapshot<Map<String, dynamic>>> documents =
+                (await FirebaseFirestore.instance
+                        .collection("checkin-history")
+                        .where("user_id", isEqualTo: uID)
+                        .get())
+                    .docs;
+            documents.forEach((element) {
+              element.reference.delete();
+            });
             Navigator.pushNamed(context, "/home");
+          }
         }
       } else {
         if (phoneNumber.length < 5) {

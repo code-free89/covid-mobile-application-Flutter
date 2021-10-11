@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid/components/button.dart';
 import 'package:covid/components/textbox.dart';
-import 'package:covid/models/user.dart';
-import 'package:covid/providers/authProvider.dart';
+import 'package:covid/models/checkin-history.dart';
+import 'package:covid/providers/dataProvider.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -379,11 +380,28 @@ class _CheckOutPageState extends State<CheckOutPage> {
             userData["last_checkin_address"] = location;
             setUserDB(FirebaseAuth.instance.currentUser!.uid, userData);
             setUserData(context, userData);
-            Navigator.pop(context);
+
+            saveHistory(context, location, date, time);
           },
           label: "Check-out",
         ),
       ),
     );
+  }
+
+  void saveHistory(
+      BuildContext context, String address, String date, String time) async {
+    CheckInHistoryData historyData = new CheckInHistoryData();
+    historyData.location = address;
+    historyData.date = date + time;
+    historyData.user_id = FirebaseAuth.instance.currentUser!.uid;
+    CollectionReference<Map<String, dynamic>> historyCollection =
+        FirebaseFirestore.instance.collection("checkin-history");
+    await historyCollection.add(historyData.toJson());
+    List<CheckInHistoryData> histories =
+        Provider.of<DataProvider>(context, listen: false).getHistories;
+    histories.add(historyData);
+    Provider.of<DataProvider>(context, listen: false).setHistories = histories;
+    Navigator.pop(context);
   }
 }
