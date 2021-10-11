@@ -1,9 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid/components/dashboard/status.dart';
 import 'package:covid/components/dashboard/tabmenu.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/constants/dashboard-menu.dart';
+import 'package:covid/models/dependent.dart';
+import 'package:covid/providers/dataProvider.dart';
 import 'package:covid/utils/styles.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -17,6 +22,32 @@ class _DashboardPageState extends State<DashboardPage> {
   final ScrollController _scrollController = new ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  void getDependents() async {
+    List<DependentData> dependents = [];
+    try {
+      final uID = FirebaseAuth.instance.currentUser!.uid;
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> documents =
+          (await FirebaseFirestore.instance
+                  .collection("dependent")
+                  .where("user_id", isEqualTo: uID)
+                  .get())
+              .docs;
+      List<Map<String, dynamic>> dependencies = [];
+      documents.forEach((element) {
+        dependencies.add({...element.data(), "id": element.id});
+      });
+      dependencies.forEach((element) {
+        DependentData dependentItem = new DependentData();
+        dependentItem.fromJson(element);
+        dependents.add(dependentItem);
+      });
+      Provider.of<DataProvider>(context, listen: false).setDependents =
+          dependents;
+    } catch (e) {
+      print("error => $e");
+    }
+  }
+
   @override
   void initState() {
     _scrollController.addListener(() {
@@ -25,6 +56,7 @@ class _DashboardPageState extends State<DashboardPage> {
         _isScrolled = curPos > 150 ? true : false;
       });
     });
+    getDependents();
     super.initState();
   }
 

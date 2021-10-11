@@ -18,7 +18,6 @@ class StatusCard extends StatefulWidget {
 class _StatusCardState extends State<StatusCard> {
   @override
   Widget build(BuildContext context) {
-    print(json.encode(getUserData(context)));
     return Card(
       child: Column(
         children: [

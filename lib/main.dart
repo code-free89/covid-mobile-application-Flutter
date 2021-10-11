@@ -11,6 +11,7 @@ import 'package:covid/pages/auth/start.dart';
 import 'package:covid/pages/home.dart';
 import 'package:covid/pages/question.dart';
 import 'package:covid/providers/authProvider.dart';
+import 'package:covid/providers/dataProvider.dart';
 import 'package:covid/splash.dart';
 import 'package:covid/status.dart';
 import 'package:covid/utils/palett.dart';
@@ -22,6 +23,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => DataProvider()),
       ],
       child: MyApp(),
     ),

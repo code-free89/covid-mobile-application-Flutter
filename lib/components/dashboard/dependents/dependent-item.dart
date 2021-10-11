@@ -1,15 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid/components/textbox.dart';
+import 'package:covid/models/dependent.dart';
+import 'package:covid/providers/dataProvider.dart';
+import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class DependentItem extends StatefulWidget {
-  final String name;
-  final String relation;
+  final DependentData data;
   final bool isVaccine;
+
   const DependentItem({
-    this.name = "",
-    this.relation = "",
+    required this.data,
     this.isVaccine = false,
     Key? key,
   }) : super(key: key);
@@ -22,7 +26,7 @@ class _DependentItemState extends State<DependentItem> {
   String shortName = "";
   @override
   void initState() {
-    var names = widget.name.split(" ");
+    var names = widget.data.name.split(" ");
     shortName = "${names[0][0]}${names.length > 1 ? names[1][0] : ""}";
     super.initState();
   }
@@ -30,6 +34,7 @@ class _DependentItemState extends State<DependentItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -59,13 +64,13 @@ class _DependentItemState extends State<DependentItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextBox(
-                    value: widget.name,
+                    value: widget.data.name,
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                     lineHeight: widget.isVaccine ? 1 : 1.3,
                   ),
                   TextBox(
-                    value: widget.relation,
+                    value: widget.data.relation,
                     fontSize: 12,
                     fontColor: Colors.black54,
                   ),
@@ -102,7 +107,11 @@ class _DependentItemState extends State<DependentItem> {
                 width: 15,
                 height: 15,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (!widget.isVaccine) {
+                      removeDependent(widget.data.id);
+                    }
+                  },
                   icon: widget.isVaccine
                       ? SvgPicture.asset(
                           "assets/images/green.svg",
@@ -121,5 +130,22 @@ class _DependentItemState extends State<DependentItem> {
         ],
       ),
     );
+  }
+
+  void removeDependent(String dependentId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("dependent")
+          .doc(dependentId)
+          .delete();
+      List<DependentData> dependents =
+          Provider.of<DataProvider>(context, listen: false).getDependents;
+      dependents.removeWhere((element) => (element.id == dependentId));
+      Provider.of<DataProvider>(context, listen: false).setDependents =
+          dependents;
+    } catch (e) {
+      showToast("Can't delete dependent");
+      print(e);
+    }
   }
 }

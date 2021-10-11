@@ -26,7 +26,6 @@ Map<String, dynamic> getUserData(BuildContext context) {
 void setUserData(BuildContext context, Map<String, dynamic> value) {
   UserData data = UserData();
   data.fromJson(value);
-  print(data);
   Provider.of<AuthProvider>(context, listen: false).userData = data;
 }
 

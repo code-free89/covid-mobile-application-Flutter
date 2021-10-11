@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid/components/button.dart';
 import 'package:covid/components/dashboard/dependents/dependent-item.dart';
 import 'package:covid/components/textbox.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:covid/models/dependent.dart';
+import 'package:covid/providers/dataProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ManageDependent extends StatefulWidget {
   const ManageDependent({Key? key}) : super(key: key);
@@ -13,32 +15,10 @@ class ManageDependent extends StatefulWidget {
 }
 
 class _ManageDependentState extends State<ManageDependent> {
-  List<Map<String, dynamic>> dependents = [];
-  void getDependents() async {
-    try {
-      final uID = FirebaseAuth.instance.currentUser!.uid;
-      List<Map<String, dynamic>> dependencies = (await FirebaseFirestore
-              .instance
-              .collection("dependent")
-              .where("user_id", isEqualTo: uID)
-              .get())
-          .docs
-          .map((e) => e.data())
-          .toList();
-      setState(() {
-        dependents = dependencies;
-      });
-    } catch (e) {}
-  }
-
-  @override
-  void initState() {
-    getDependents();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    List<DependentData> dependents =
+        Provider.of<DataProvider>(context, listen: true).getDependents;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 50,
@@ -83,10 +63,7 @@ class _ManageDependentState extends State<ManageDependent> {
                     padding: 20,
                   ),
                   ...(dependents
-                      .map((dependent) => DependentItem(
-                            name: dependent["name"],
-                            relation: dependent["relation"],
-                          ))
+                      .map((dependent) => DependentItem(data: dependent))
                       .toList()),
                 ],
               ),

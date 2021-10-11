@@ -3,9 +3,12 @@ import 'package:covid/components/button.dart';
 import 'package:covid/components/dropdown.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/components/textedit.dart';
+import 'package:covid/models/dependent.dart';
+import 'package:covid/providers/dataProvider.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddDependent extends StatefulWidget {
   const AddDependent({Key? key}) : super(key: key);
@@ -22,25 +25,14 @@ class _AddDependentState extends State<AddDependent> {
   TextEditingController postCodeController = new TextEditingController();
   Map<String, dynamic> userData = {};
   bool isLoading = false;
-  var dependentData = {
-    "name": "",
-    "relation": "",
-    "passport": "",
-    "age": "",
-    "gender": "",
-    "address": "",
-    "postcode": "",
-    "state": "",
-    "vaccineDependency": false,
-    "user_id": FirebaseAuth.instance.currentUser!.uid,
-  };
+  DependentData dependentData = new DependentData();
 
   @override
   void initState() {
     userData = getUserData(context);
-    dependentData["relation"] = "Spouse";
-    dependentData["gender"] = "Male";
-    dependentData["state"] = "Johor";
+    dependentData.relation = "Spouse";
+    dependentData.gender = "Male";
+    dependentData.state = "Johor";
     formatDependent();
     super.initState();
   }
@@ -56,7 +48,6 @@ class _AddDependentState extends State<AddDependent> {
             size: 35,
           ),
           onTap: () {
-            Navigator.pop(context);
             Navigator.pop(context);
           },
         ),
@@ -134,7 +125,7 @@ class _AddDependentState extends State<AddDependent> {
                         onChange: onChangeGender,
                       ),
                       TextEdit(
-                        labelText: "Current Address",
+                        hintText: "Current Address",
                         controller: addressController,
                         isUnderline: true,
                       ),
@@ -213,7 +204,7 @@ class _AddDependentState extends State<AddDependent> {
                   color: Colors.black,
                   bgColor: Colors.white,
                   shadow: false,
-                  onPressed: onSaveAndNew,
+                  onPressed: () => onSaveAndNew(context),
                 ),
                 Button(
                   label: "Save",
@@ -234,25 +225,25 @@ class _AddDependentState extends State<AddDependent> {
     ageController.text = "";
     addressController.text = userData["address"];
     postCodeController.text = userData["postcode"];
-    dependentData["address"] = userData["address"];
-    dependentData["postcode"] = userData["postcode"];
+    dependentData.address = userData["address"];
+    dependentData.postcode = userData["postcode"];
   }
 
   void onChangeRelation(String relation) {
     setState(() {
-      dependentData["relation"] = relation;
+      dependentData.relation = relation;
     });
   }
 
   void onChangeGender(String gender) {
     setState(() {
-      dependentData["gender"] = gender;
+      dependentData.gender = gender;
     });
   }
 
   void onChangeState(String state) {
     setState(() {
-      dependentData["state"] = state;
+      dependentData.state = state;
     });
   }
 
@@ -260,13 +251,21 @@ class _AddDependentState extends State<AddDependent> {
     try {
       setState(() {
         isLoading = true;
-        dependentData["name"] = nameController.value.text;
-        dependentData["passport"] = passportController.value.text;
-        dependentData["age"] = ageController.value.text;
+        dependentData.user_id = FirebaseAuth.instance.currentUser!.uid;
+        dependentData.name = nameController.value.text;
+        dependentData.passport = passportController.value.text;
+        dependentData.age = ageController.value.text;
       });
       CollectionReference<Map<String, dynamic>> dependentCollection =
           FirebaseFirestore.instance.collection("dependent");
-      await dependentCollection.add(dependentData);
+      DocumentReference<Map<String, dynamic>> newDependent =
+          await dependentCollection.add(dependentData.toJson());
+      dependentData.id = newDependent.id;
+      List<DependentData> dependents =
+          Provider.of<DataProvider>(context, listen: false).getDependents;
+      dependents.add(dependentData);
+      Provider.of<DataProvider>(context, listen: false).setDependents =
+          dependents;
       setState(() {
         isLoading = false;
       });
@@ -276,24 +275,35 @@ class _AddDependentState extends State<AddDependent> {
       });
     }
     Navigator.pop(context);
-    Navigator.pop(context);
   }
 
-  void onSaveAndNew() async {
+  void onSaveAndNew(BuildContext context) async {
     try {
       setState(() {
         isLoading = true;
-        dependentData["name"] = nameController.value.text;
-        dependentData["passport"] = passportController.value.text;
-        dependentData["age"] = ageController.value.text;
+        dependentData.user_id = FirebaseAuth.instance.currentUser!.uid;
+        dependentData.name = nameController.value.text;
+        dependentData.passport = passportController.value.text;
+        dependentData.age = ageController.value.text;
       });
       CollectionReference<Map<String, dynamic>> dependentCollection =
           FirebaseFirestore.instance.collection("dependent");
-      await dependentCollection.add(dependentData);
+      DocumentReference<Map<String, dynamic>> newDependent =
+          await dependentCollection.add(dependentData.toJson());
+      dependentData.id = newDependent.id;
+      List<DependentData> dependents =
+          Provider.of<DataProvider>(context, listen: false).getDependents;
+      dependents.add(dependentData);
+      Provider.of<DataProvider>(context, listen: false).setDependents =
+          dependents;
+      setState(() {
+        isLoading = false;
+      });
     } catch (e) {
       setState(() {
         isLoading = false;
       });
+      print(e);
     }
     formatDependent();
   }

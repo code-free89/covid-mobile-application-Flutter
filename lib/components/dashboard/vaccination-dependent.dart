@@ -53,13 +53,13 @@ class _VaccinationDependentState extends State<VaccinationDependent> {
                   fontWeight: FontWeight.bold,
                   padding: 20,
                 ),
-                ...(dependents
-                    .map((dependent) => DependentItem(
-                          name: dependent["name"],
-                          relation: dependent["relation"],
-                          isVaccine: true,
-                        ))
-                    .toList()),
+                // ...(dependents
+                //     .map((dependent) => DependentItem(
+                //           name: dependent["name"],
+                //           relation: dependent["relation"],
+                //           isVaccine: true,
+                //         ))
+                //     .toList()),
               ],
             ),
           ),
