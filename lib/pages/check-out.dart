@@ -173,35 +173,41 @@ class _CheckOutPageState extends State<CheckOutPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextBox(
-                                    value: "Nama",
-                                    fontSize: 11,
-                                    fontColor: Colors.black54,
-                                  ),
-                                  TextBox(
-                                    value: userData["name"]
-                                        .toString()
-                                        .toUpperCase(),
-                                    fontSize: 16,
-                                  ),
-                                ],
+                              Container(
+                                width: 150,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextBox(
+                                      value: "Nama",
+                                      fontSize: 11,
+                                      fontColor: Colors.black54,
+                                    ),
+                                    TextBox(
+                                      value: userData["name"]
+                                          .toString()
+                                          .toUpperCase(),
+                                      fontSize: 14,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  TextBox(
-                                    value: "No. Telefon",
-                                    fontSize: 11,
-                                    fontColor: Colors.black54,
-                                  ),
-                                  TextBox(
-                                    value: userData["phoneNumber"],
-                                    fontSize: 16,
-                                  ),
-                                ],
+                              Container(
+                                width: 150,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    TextBox(
+                                      value: "No. Telefon",
+                                      fontSize: 11,
+                                      fontColor: Colors.black54,
+                                    ),
+                                    TextBox(
+                                      value: userData["phoneNumber"],
+                                      fontSize: 14,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -219,7 +225,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                                   ),
                                   TextBox(
                                     value: date,
-                                    fontSize: 16,
+                                    fontSize: 14,
                                   ),
                                 ],
                               ),
@@ -233,7 +239,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                                   ),
                                   TextBox(
                                     value: time,
-                                    fontSize: 16,
+                                    fontSize: 14,
                                   ),
                                 ],
                               ),

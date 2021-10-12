@@ -227,7 +227,7 @@ class _CheckInPageState extends State<CheckInPage> {
                                                 value: "History",
                                                 fontColor:
                                                     AppStyles.primaryColor,
-                                                fontSize: 12,
+                                                fontSize: 11,
                                               ),
                                             ),
                                           ),
@@ -236,7 +236,7 @@ class _CheckInPageState extends State<CheckInPage> {
                                             bottom: 0,
                                             child: TextBox(
                                               value: "Checked-out",
-                                              fontSize: 14,
+                                              fontSize: 13,
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
@@ -259,13 +259,13 @@ class _CheckInPageState extends State<CheckInPage> {
                                                     fontSize: 11,
                                                   ),
                                                   Container(
-                                                    width: 200,
+                                                    width: 250,
                                                     child: TextBox(
                                                       value: userData[
                                                               "last_checkin_address"]
                                                           .toString()
                                                           .replaceAll("_", " "),
-                                                      fontSize: 17,
+                                                      fontSize: 14,
                                                       padding: 5,
                                                     ),
                                                   ),
