@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:covid/components/profile/certificate.dart';
 import 'package:covid/components/textbox.dart';
+import 'package:covid/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
+import 'package:intl/intl.dart';
 
 class CertificatedWidget extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -25,25 +27,38 @@ class CertificatedWidget extends StatefulWidget {
 }
 
 class _CertificatedWidgetState extends State<CertificatedWidget> {
+  UserData uData = new UserData();
   @override
   Widget build(BuildContext context) {
+    uData.fromJson(widget.userData);
     return Column(
       key: ValueKey(true),
       children: [
         TextBox(
-          value: widget.userData["name"],
+          value: uData.name,
           fontSize: 20,
           fontWeight: FontWeight.w500,
           padding: 10,
         ),
         TextBox(
-          value: widget.userData["passportNo"],
+          value: uData.passportNo,
           fontSize: 20,
           padding: 10,
         ),
+        uData.dob != ""
+            ? TextBox(
+                value: "D.O.B: ${uData.dob}",
+                fontSize: 20,
+                padding: 10,
+              )
+            : TextBox(
+                value: "D.O.B: ${generateDOB(uData.passportNo)}",
+                fontSize: 20,
+                padding: 10,
+              ),
         CertificatCard(
           title: "Dose 1: ",
-          date: widget.userData["dose1_date"] ?? "",
+          date: uData.dose1_date,
           manufacturer: widget.dose1Data["manufacturer"] ?? "",
           facility: widget.dose1Data["facility"] ?? "",
           batch: widget.dose1Data["batch"] ?? "",
@@ -51,7 +66,7 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
         SizedBox(height: 15),
         CertificatCard(
           title: "Dose 2: ",
-          date: widget.userData["dose2_date"] ?? "",
+          date: uData.dose2_date,
           manufacturer: widget.dose2Data["manufacturer"] ?? "",
           batch: widget.dose2Data["batch"] ?? "",
           facility: widget.dose2Data["facility"] ?? "",
@@ -161,5 +176,15 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
     } catch (e) {
       print(e);
     }
+  }
+
+  String generateDOB(String date) {
+    int year = int.parse(date.substring(0, 2));
+    int month = int.parse(date.substring(2, 4));
+    int day = int.parse(date.substring(4, 6));
+    DateTime now = DateTime(year < 30 ? year + 2000 : year + 1900, month, day);
+    var formatter = new DateFormat("dd MMMM yyyy");
+    date = formatter.format(now);
+    return date;
   }
 }

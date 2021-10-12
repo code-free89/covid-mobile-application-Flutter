@@ -17,6 +17,7 @@ class UserData {
   String dose2_date;
   String last_checkin;
   String last_checkin_address;
+  String dob;
 
   UserData({
     this.email = "",
@@ -37,6 +38,7 @@ class UserData {
     this.dose2_date = "",
     this.last_checkin = "",
     this.last_checkin_address = "",
+    this.dob = "",
   });
 
   void fromJson(Map<String, dynamic> json) {
@@ -58,6 +60,7 @@ class UserData {
     this.dose2_date = json["dose2_date"] ?? "";
     this.last_checkin = json["last_checkin"] ?? "";
     this.last_checkin_address = json["last_checkin_address"] ?? "";
+    this.dob = json["dob"] ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -80,6 +83,7 @@ class UserData {
       "dose2_date": this.dose2_date,
       "last_checkin": this.last_checkin,
       "last_checkin_address": this.last_checkin_address,
+      "dob": this.dob,
     };
   }
 }
