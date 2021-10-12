@@ -255,17 +255,26 @@ class _AddDependentState extends State<AddDependent> {
         dependentData.name = nameController.value.text;
         dependentData.passport = passportController.value.text;
         dependentData.age = ageController.value.text;
+        dependentData.postcode = postCodeController.value.text;
+        dependentData.address = addressController.value.text;
       });
-      CollectionReference<Map<String, dynamic>> dependentCollection =
-          FirebaseFirestore.instance.collection("dependent");
-      DocumentReference<Map<String, dynamic>> newDependent =
-          await dependentCollection.add(dependentData.toJson());
-      dependentData.id = newDependent.id;
-      List<DependentData> dependents =
-          Provider.of<DataProvider>(context, listen: false).getDependents;
-      dependents.add(dependentData);
-      Provider.of<DataProvider>(context, listen: false).setDependents =
-          dependents;
+      if (dependentData.name == "" ||
+          dependentData.age == "" ||
+          dependentData.address == "" ||
+          dependentData.postcode == "") {
+        showToast("Please fill all the fields");
+      } else {
+        CollectionReference<Map<String, dynamic>> dependentCollection =
+            FirebaseFirestore.instance.collection("dependent");
+        DocumentReference<Map<String, dynamic>> newDependent =
+            await dependentCollection.add(dependentData.toJson());
+        dependentData.id = newDependent.id;
+        List<DependentData> dependents =
+            Provider.of<DataProvider>(context, listen: false).getDependents;
+        dependents.add(dependentData);
+        Provider.of<DataProvider>(context, listen: false).setDependents =
+            dependents;
+      }
       setState(() {
         isLoading = false;
       });
@@ -285,17 +294,26 @@ class _AddDependentState extends State<AddDependent> {
         dependentData.name = nameController.value.text;
         dependentData.passport = passportController.value.text;
         dependentData.age = ageController.value.text;
+        dependentData.postcode = postCodeController.value.text;
+        dependentData.address = addressController.value.text;
       });
-      CollectionReference<Map<String, dynamic>> dependentCollection =
-          FirebaseFirestore.instance.collection("dependent");
-      DocumentReference<Map<String, dynamic>> newDependent =
-          await dependentCollection.add(dependentData.toJson());
-      dependentData.id = newDependent.id;
-      List<DependentData> dependents =
-          Provider.of<DataProvider>(context, listen: false).getDependents;
-      dependents.add(dependentData);
-      Provider.of<DataProvider>(context, listen: false).setDependents =
-          dependents;
+      if (dependentData.name == "" ||
+          dependentData.age == "" ||
+          dependentData.address == "" ||
+          dependentData.postcode == "") {
+        showToast("Please fill all the fields");
+      } else {
+        CollectionReference<Map<String, dynamic>> dependentCollection =
+            FirebaseFirestore.instance.collection("dependent");
+        DocumentReference<Map<String, dynamic>> newDependent =
+            await dependentCollection.add(dependentData.toJson());
+        dependentData.id = newDependent.id;
+        List<DependentData> dependents =
+            Provider.of<DataProvider>(context, listen: false).getDependents;
+        dependents.add(dependentData);
+        Provider.of<DataProvider>(context, listen: false).setDependents =
+            dependents;
+      }
       setState(() {
         isLoading = false;
       });

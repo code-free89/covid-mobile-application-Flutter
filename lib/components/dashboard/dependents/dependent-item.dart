@@ -26,8 +26,13 @@ class _DependentItemState extends State<DependentItem> {
   String shortName = "";
   @override
   void initState() {
-    var names = widget.data.name.split(" ");
-    shortName = "${names[0][0]}${names.length > 1 ? names[1][0] : ""}";
+    if (widget.data.name != "") {
+      var names = widget.data.name.toUpperCase().split(" ");
+      print(names);
+      shortName = names.length != 0
+          ? "${names[0][0]}${names.length > 1 ? names[1][0] : ""}"
+          : "";
+    }
     super.initState();
   }
 
@@ -54,7 +59,7 @@ class _DependentItemState extends State<DependentItem> {
                     value: shortName,
                     fontWeight: FontWeight.w500,
                     fontColor: AppStyles.primaryColor,
-                    fontSize: 16,
+                    fontSize: 14,
                   ),
                 ),
               ),
