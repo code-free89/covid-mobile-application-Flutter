@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class DependentData {
   String id;
   String address;

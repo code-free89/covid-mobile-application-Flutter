@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid/models/user.dart';
 import 'package:covid/providers/authProvider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mailer/mailer.dart';
 import 'package:provider/provider.dart';
 
 void showToast(String msg) {

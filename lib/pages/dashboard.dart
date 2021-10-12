@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid/components/dashboard/status.dart';
 import 'package:covid/components/dashboard/tabmenu.dart';
-import 'package:covid/components/textbox.dart';
-import 'package:covid/constants/dashboard-menu.dart';
 import 'package:covid/models/checkin-history.dart';
 import 'package:covid/models/dependent.dart';
 import 'package:covid/providers/dataProvider.dart';
@@ -21,7 +19,6 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   bool _isScrolled = false;
   final ScrollController _scrollController = new ScrollController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void getDependents() async {
     List<DependentData> dependents = [];

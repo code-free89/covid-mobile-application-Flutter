@@ -1,5 +1,4 @@
 import 'package:covid/components/textbox.dart';
-import 'package:covid/models/user.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:flutter/material.dart';

@@ -58,8 +58,7 @@ class _QRScanResultPageState extends State<QRScanResultPage> {
           IconButton(
             padding: EdgeInsets.all(0),
             onPressed: () async {
-              String barcodeScanRes;
-              barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+              await FlutterBarcodeScanner.scanBarcode(
                   "#ff6666", "Cancel", true, ScanMode.QR);
             },
             icon: Icon(

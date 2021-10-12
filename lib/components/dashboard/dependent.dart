@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid/components/button.dart';
 import 'package:covid/components/dashboard/dependents/dependent-item.dart';
 import 'package:covid/components/textbox.dart';

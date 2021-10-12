@@ -1,6 +1,5 @@
 import 'package:covid/pages/auth/email_verification.dart';
 import 'package:covid/pages/auth/verification.dart';
-import 'package:covid/providers/authProvider.dart';
 import 'package:covid/utils/enums.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);

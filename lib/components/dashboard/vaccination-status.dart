@@ -1,13 +1,10 @@
 import 'package:covid/components/textbox.dart';
 import 'package:covid/constants/vaccinationStatus.dart';
 import 'package:covid/pages/home.dart';
-import 'package:covid/pages/profile.dart';
 import 'package:covid/utils/functions.dart';
-import 'package:covid/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timelines/timelines.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class VaccinationStatus extends StatefulWidget {
   const VaccinationStatus({Key? key}) : super(key: key);

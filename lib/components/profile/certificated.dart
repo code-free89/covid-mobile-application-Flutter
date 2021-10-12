@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:covid/components/profile/certificate.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
 
 class CertificatedWidget extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -53,44 +57,109 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
           facility: widget.dose2Data["facility"] ?? "",
           isBorder: true,
         ),
-        Container(
-          margin: EdgeInsets.only(top: 10),
-          padding: EdgeInsets.only(
-            top: 2,
-            left: 8,
-            bottom: 2,
-            right: 8,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.black),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: GestureDetector(
-            child: Container(
-              padding: EdgeInsets.only(top: 5, bottom: 2),
-              child: Column(
-                children: [
-                  Image(
-                    image: AssetImage(
-                      "assets/images/big-qr.png",
-                    ),
-                    width: 30,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 10),
+              padding: EdgeInsets.only(
+                top: 2,
+                left: 8,
+                bottom: 2,
+                right: 8,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: GestureDetector(
+                child: Container(
+                  padding: EdgeInsets.only(top: 5, bottom: 2),
+                  child: Column(
+                    children: [
+                      Image(
+                        image: AssetImage(
+                          "assets/images/big-qr.png",
+                        ),
+                        height: 30,
+                      ),
+                      SizedBox(height: 5),
+                      TextBox(
+                        value: "Show QR",
+                        fontColor: Colors.black54,
+                      )
+                    ],
                   ),
-                  SizedBox(height: 5),
-                  TextBox(
-                    value: "Show QR",
-                    fontColor: Colors.black54,
-                  )
-                ],
+                ),
+                onTap: () {
+                  widget.onTap();
+                },
               ),
             ),
-            onTap: () {
-              widget.onTap();
-            },
-          ),
-        )
+            SizedBox(width: 20),
+            Container(
+              margin: EdgeInsets.only(top: 10),
+              padding: EdgeInsets.only(
+                top: 2,
+                left: 8,
+                bottom: 2,
+                right: 8,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: GestureDetector(
+                child: Container(
+                  padding: EdgeInsets.only(top: 5, bottom: 2),
+                  child: Column(
+                    children: [
+                      Image(
+                        image: AssetImage(
+                          "assets/images/pdf.png",
+                        ),
+                        height: 30,
+                      ),
+                      SizedBox(height: 5),
+                      TextBox(
+                        value: "Generate",
+                        fontColor: Colors.black54,
+                      )
+                    ],
+                  ),
+                ),
+                onTap: generatePDF,
+              ),
+            ),
+          ],
+        ),
       ],
     );
+  }
+
+  void generatePDF() async {
+    try {
+      final pdf = pw.Document();
+
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (pw.Context context) {
+            return pw.Center(
+              child: pw.Text("Hello World"),
+            );
+          },
+        ),
+      );
+      final output = await getTemporaryDirectory();
+      print(output.path);
+      final file = File("${output.path}/example.pdf");
+      await file.writeAsString("asdf");
+      print("pdf saved");
+    } catch (e) {
+      print(e);
+    }
   }
 }
