@@ -32,7 +32,9 @@ class _InformationCardState extends State<InformationCard> {
                   fontSize: 15,
                 ),
                 TextBox(
-                  value: userData["email"] != "" ? userData["email"] : "",
+                  value: userData["phoneNumber"] != ""
+                      ? userData["phoneNumber"].toString().substring(1)
+                      : userData["email"],
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 )

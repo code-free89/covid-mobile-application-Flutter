@@ -315,8 +315,12 @@ class _CheckInPageState extends State<CheckInPage> {
               String location = "";
               if (barcodeScanRes.contains("&ln=")) {
                 int startIndex = barcodeScanRes.indexOf("ln=") + 3;
-                int endIndex = barcodeScanRes.indexOf('&', startIndex);
-                location = barcodeScanRes.substring(startIndex, endIndex);
+                try {
+                  int endIndex = barcodeScanRes.indexOf('&', startIndex);
+                  location = barcodeScanRes.substring(startIndex, endIndex);
+                } catch (e) {
+                  location = barcodeScanRes.substring(startIndex);
+                }
               } else if (barcodeScanRes.contains("&eln=")) {
                 int startIndex = barcodeScanRes.indexOf("eln=") + 4;
                 int endIndex = barcodeScanRes.indexOf('&formType', startIndex);

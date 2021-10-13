@@ -163,7 +163,9 @@ class _CheckOutPageState extends State<CheckOutPage> {
                             children: [
                               Expanded(
                                 child: TextBox(
-                                  value: location.replaceAll("_", ""),
+                                  value: location
+                                      .replaceAll("_", " ")
+                                      .toUpperCase(),
                                   fontSize: 14,
                                 ),
                               ),
