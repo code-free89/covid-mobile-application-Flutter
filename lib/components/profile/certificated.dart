@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:covid/components/profile/certificate.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/models/user.dart';
+import 'package:covid/utils/functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider/path_provider.dart';
-import 'package:intl/intl.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:open_file/open_file.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CertificatedWidget extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -31,6 +31,7 @@ class CertificatedWidget extends StatefulWidget {
 
 class _CertificatedWidgetState extends State<CertificatedWidget> {
   UserData uData = new UserData();
+  String generateStatus = "Generate";
   @override
   Widget build(BuildContext context) {
     uData.fromJson(widget.userData);
@@ -129,7 +130,7 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
                 border: Border.all(color: Colors.black),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: GestureDetector(
+              child: InkWell(
                 child: Container(
                   padding: EdgeInsets.only(top: 5, bottom: 2),
                   child: Column(
@@ -142,7 +143,7 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
                       ),
                       SizedBox(height: 5),
                       TextBox(
-                        value: "Generate",
+                        value: generateStatus,
                         fontColor: Colors.black54,
                       )
                     ],
@@ -165,9 +166,6 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
           (await rootBundle.load("assets/images/mosti.png"))
               .buffer
               .asUint8List());
-      // final logoImage = pw.(
-      //   File('assets/images/images/mosti.png').readAsBytesSync(),
-      // );
 
       pdf.addPage(
         pw.Page(
@@ -413,35 +411,30 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
           },
         ),
       );
-
-      Directory? directory = await getExternalStorageDirectory();
-      print(directory!.path);
-      final file = File(
-          "/storage/emulated/0/Download/vaccination_${uData.passportNo}.pdf");
+      var status = await Permission.storage.status;
+      print("${status.isGranted}");
+      if (!status.isGranted) await Permission.storage.request();
+      Directory downloadDirectory = Directory("/storage/emulated/0/Download");
+      bool isExist = await downloadDirectory.exists();
+      print("$isExist");
+      if (!isExist) await downloadDirectory.create();
+      print("${downloadDirectory.path}/vaccination_${uData.passportNo}.pdf");
+      final file =
+          File("${downloadDirectory.path}/vaccination_${uData.passportNo}.pdf");
+      if (await file.exists()) await file.delete();
       await file.create();
-      print(await pdf.save());
-      file.writeAsBytesSync(await pdf.save());
-      print("pdf saved");
+      print("created");
+      if (generateStatus == "Generate") {
+        setState(() {
+          generateStatus = "Download";
+        });
+      } else {
+        file.writeAsBytesSync(await pdf.save());
+        OpenFile.open(file.path);
+      }
     } catch (e) {
-      print("error => $e");
+      showToast("$e");
     }
-  }
-
-  String generateDOB(String date) {
-    int year = int.parse(date.substring(0, 2));
-    int month = int.parse(date.substring(2, 4));
-    int day = int.parse(date.substring(4, 6));
-    DateTime now = DateTime(year < 30 ? year + 2000 : year + 1900, month, day);
-    var formatter = new DateFormat("dd MMMM yyyy");
-    date = formatter.format(now);
-    return date;
-  }
-
-  String generateCurrentDate() {
-    DateTime now = DateTime.now();
-    var formatter = new DateFormat("dd MMMM yyyy");
-    String date = formatter.format(now);
-    return date;
   }
 
   pw.Widget pdfVaccineWidget(int doseNum, UserData uData, String facility,
@@ -502,15 +495,21 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
                       pw.Text("Nama Produk / Product name",
                           style: pw.TextStyle(
                               fontStyle: pw.FontStyle.italic, fontSize: 10)),
-                      pw.Text(
-                          "CoronaVac Suspension for Injection SARS-CoV-2 Vaccine (Vero Cell), Inactivated",
+                      pw.Text(manufacturer,
                           style: pw.TextStyle(
                               fontSize: 10, fontWeight: pw.FontWeight.bold)),
                       pw.SizedBox(height: 5),
                       pw.Text("Nama Umum / Common Name",
                           style: pw.TextStyle(
                               fontStyle: pw.FontStyle.italic, fontSize: 10)),
-                      pw.Text("Sinovac",
+                      pw.Text(
+                          manufacturer.toLowerCase().contains("comirnaty")
+                              ? "Pfizer"
+                              : manufacturer
+                                      .toLowerCase()
+                                      .contains("coronaVac suspension")
+                                  ? "Sinovac"
+                                  : "Astrazaneca",
                           style: pw.TextStyle(
                               fontSize: 10, fontWeight: pw.FontWeight.bold)),
                       pw.SizedBox(height: 5),
@@ -527,7 +526,15 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
                                     style: pw.TextStyle(
                                         fontStyle: pw.FontStyle.italic,
                                         fontSize: 10)),
-                                pw.Text(manufacturer,
+                                pw.Text(
+                                    manufacturer
+                                            .toLowerCase()
+                                            .contains("comirnaty")
+                                        ? "Pfizer Inc"
+                                        : manufacturer.toLowerCase().contains(
+                                                "coronaVac suspension")
+                                            ? "Sinovac Life Sciences Co. Ltd"
+                                            : "SK Bioscience Co, Ltd",
                                     style: pw.TextStyle(
                                         fontSize: 10,
                                         fontWeight: pw.FontWeight.bold)),

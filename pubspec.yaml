@@ -47,6 +47,9 @@ dependencies:
   pdf: ^3.6.0
   universal_html: ^2.0.8
   path_provider: ^2.0.4
+  open_file: ^3.2.1
+  permission_handler: ^8.1.6
+  downloads_path_provider_28: ^0.1.2
 
 dev_dependencies:
   flutter_test:

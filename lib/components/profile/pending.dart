@@ -1,8 +1,11 @@
 import 'package:covid/components/textbox.dart';
+import 'package:covid/models/user.dart';
 import 'package:flutter/material.dart';
 
 Widget PendingWidget(
     BuildContext context, dynamic userData, dynamic dose1Data) {
+  UserData uData = new UserData();
+  uData.fromJson(userData);
   return Container(
     margin: EdgeInsets.only(bottom: 20),
     child: Column(
@@ -18,107 +21,42 @@ Widget PendingWidget(
           fontSize: 20,
           padding: 10,
         ),
-        Row(
-          children: [
-            Flexible(
-              flex: 1,
-              child: Container(
-                width: double.infinity,
-                child: TextBox(
-                  value: "Dose 1:",
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  padding: 15,
-                ),
+        Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextBox(
+                value: "Dose 1:",
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                padding: 10,
               ),
-            ),
-            Flexible(
-              flex: 1,
-              child: Container(
-                width: double.infinity,
+              TextBox(
+                value: "Date: ${uData.dose1_date}",
+                fontSize: 13,
+                fontColor: Colors.black54,
+                padding: 5,
               ),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Flexible(
-              flex: 1,
-              child: Container(
-                width: double.infinity,
-                child: TextBox(
-                  value: "Date: ",
-                  fontSize: 14,
-                  fontColor: Colors.black54,
-                ),
+              TextBox(
+                value: "Manufacturer: ${dose1Data["manufacturer"]}",
+                fontSize: 13,
+                fontColor: Colors.black54,
+                padding: 5,
               ),
-            ),
-            Flexible(
-              flex: 1,
-              child: Container(
-                width: double.infinity,
-                child: TextBox(
-                  value: userData["dose1_date"],
-                  fontSize: 12,
-                  fontColor: Colors.black54,
-                ),
+              TextBox(
+                value: "Facility: ${dose1Data["facility"]}",
+                fontSize: 13,
+                fontColor: Colors.black54,
+                padding: 5,
               ),
-            ),
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flexible(
-              flex: 1,
-              child: Container(
-                width: double.infinity,
-                child: TextBox(
-                  value: "Manufacturer: ",
-                  fontSize: 14,
-                  fontColor: Colors.black54,
-                ),
+              TextBox(
+                value: "Batch: ${dose1Data["batch"]}",
+                fontSize: 13,
+                fontColor: Colors.black54,
+                padding: 45,
               ),
-            ),
-            Flexible(
-              flex: 1,
-              child: Container(
-                width: double.infinity,
-                child: TextBox(
-                  value: dose1Data["manufacturer"],
-                  fontSize: 12,
-                  fontColor: Colors.black54,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flexible(
-              flex: 1,
-              child: Container(
-                width: double.infinity,
-                child: TextBox(
-                  value: "Batch: ",
-                  fontSize: 14,
-                  fontColor: Colors.black54,
-                ),
-              ),
-            ),
-            Flexible(
-              flex: 1,
-              child: Container(
-                width: double.infinity,
-                child: TextBox(
-                  value: dose1Data["batch"],
-                  fontSize: 12,
-                  fontColor: Colors.black54,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     ),

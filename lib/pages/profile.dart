@@ -9,6 +9,7 @@ import 'package:covid/components/profile/refresh.dart';
 import 'package:covid/components/profile/status.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/constants/settings-menu.dart';
+import 'package:covid/models/user.dart';
 import 'package:covid/utils/functions.dart';
 import 'package:covid/utils/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -81,6 +82,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    UserData uData = new UserData();
+    uData.fromJson(userData);
     return Scaffold(
       appBar: AppBar(
         key: _scaffoldKey,
@@ -205,14 +208,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   RefreshCard(),
                   StatusCard(),
                   SizedBox(height: 15),
-                  userData["dose1"] != ""
+                  uData.dose1 != ""
                       ? Stack(
                           children: [
                             Container(
                               width: double.infinity,
                               margin: EdgeInsets.only(top: 50),
                               decoration: BoxDecoration(
-                                color: userData["dose2"] != ""
+                                color: uData.dose2 != ""
                                     ? Color(0xFFFDD775)
                                     : Colors.white,
                                 border: Border.all(color: Colors.black),
@@ -227,7 +230,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                       border: Border(
                                         bottom: BorderSide(
                                           width: 3,
-                                          color: Colors.black87,
+                                          color: uData.dose2 != ""
+                                              ? Colors.black87
+                                              : Color(0xFFFDD775),
                                         ),
                                       ),
                                     ),
@@ -243,7 +248,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                           padding: 10,
                                         ),
                                         TextBox(
-                                          value: "Digital Certificate",
+                                          value: uData.dose2 != ""
+                                              ? "Digital Certificate"
+                                              : "Status",
                                           fontSize: 20,
                                           padding: 10,
                                         )

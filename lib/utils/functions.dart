@@ -4,6 +4,7 @@ import 'package:covid/providers/authProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 void showToast(String msg) {
   Fluttertoast.showToast(
@@ -84,4 +85,21 @@ Future<Map<String, dynamic>> getStatisticsGlobal() async {
               .get())
           .data() ??
       {};
+}
+
+String generateDOB(String date) {
+  int year = int.parse(date.substring(0, 2));
+  int month = int.parse(date.substring(2, 4));
+  int day = int.parse(date.substring(4, 6));
+  DateTime now = DateTime(year < 30 ? year + 2000 : year + 1900, month, day);
+  var formatter = new DateFormat("dd MMMM yyyy");
+  date = formatter.format(now);
+  return date;
+}
+
+String generateCurrentDate() {
+  DateTime now = DateTime.now();
+  var formatter = new DateFormat("dd MMMM yyyy");
+  String date = formatter.format(now);
+  return date;
 }
