@@ -7,10 +7,12 @@ import 'package:covid/utils/functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 
 class CertificatedWidget extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -412,19 +414,20 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
         ),
       );
       var status = await Permission.storage.status;
-      print("${status.isGranted}");
       if (!status.isGranted) await Permission.storage.request();
-      Directory downloadDirectory = Directory("/storage/emulated/0/Download");
-      bool isExist = await downloadDirectory.exists();
-      print("$isExist");
-      if (!isExist) await downloadDirectory.create();
-      print("${downloadDirectory.path}/vaccination_${uData.passportNo}.pdf");
+      Directory downloadDirectory = await getApplicationDocumentsDirectory();
+      // Directory? downloadDirectory =
+      //     await DownloadsPathProvider.downloadsDirectory;
+      // bool isExist = await downloadDirectory!.exists();
+      // showToast("$isExist");
+      // if (!isExist) await downloadDirectory.create();
+      // showToast(
+      //     "${downloadDirectory.path}/vaccination_${uData.passportNo}.pdf");
       final file =
           File("${downloadDirectory.path}/vaccination_${uData.passportNo}.pdf");
-      if (await file.exists()) await file.delete();
-      await file.create();
-      print("created");
       if (generateStatus == "Generate") {
+        if (await file.exists()) await file.delete();
+        await file.create();
         setState(() {
           generateStatus = "Download";
         });
@@ -433,7 +436,7 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
         OpenFile.open(file.path);
       }
     } catch (e) {
-      showToast("$e");
+      print("$e");
     }
   }
 
