@@ -12,7 +12,6 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 
 class CertificatedWidget extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -275,7 +274,10 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
                                         style: pw.TextStyle(
                                             fontStyle: pw.FontStyle.italic,
                                             fontSize: 10)),
-                                    pw.Text(uData.ethnity,
+                                    pw.Text(
+                                        uData.ethnity == "Malay"
+                                            ? "Malaysia"
+                                            : uData.ethnity,
                                         style: pw.TextStyle(
                                             fontSize: 10,
                                             fontWeight: pw.FontWeight.bold)),

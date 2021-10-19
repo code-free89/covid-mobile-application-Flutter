@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.qr_code_2_outlined,
+                Icons.qr_code_outlined,
                 size: 32,
               ),
               label: "Check-in",
