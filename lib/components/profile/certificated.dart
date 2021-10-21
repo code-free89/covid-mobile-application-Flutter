@@ -434,6 +434,9 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
           generateStatus = "Download";
         });
       } else {
+        setState(() {
+          generateStatus = "Generate";
+        });
         file.writeAsBytesSync(await pdf.save());
         OpenFile.open(file.path);
       }
@@ -512,7 +515,7 @@ class _CertificatedWidgetState extends State<CertificatedWidget> {
                               ? "Pfizer"
                               : manufacturer
                                       .toLowerCase()
-                                      .contains("coronaVac suspension")
+                                      .contains("coronavac suspension")
                                   ? "Sinovac"
                                   : "Astrazaneca",
                           style: pw.TextStyle(

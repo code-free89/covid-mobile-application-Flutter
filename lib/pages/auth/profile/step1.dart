@@ -179,7 +179,6 @@ class _SetupProfile1State extends State<SetupProfile1> {
                   TextEdit(
                       labelText: "NRIC / Passport No",
                       hintText: "NRIC / Passport No",
-                      type: "number",
                       controller: passportController),
                   TextEdit(
                     labelText: "Age",
