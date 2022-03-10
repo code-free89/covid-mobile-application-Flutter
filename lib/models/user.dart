@@ -13,8 +13,10 @@ class UserData {
   bool isFirstTimeLogin;
   String dose1;
   String dose2;
+  String booster;
   String dose1_date;
   String dose2_date;
+  String booster_date;
   String last_checkin;
   String last_checkin_address;
   String dob;
@@ -34,8 +36,10 @@ class UserData {
     this.isFirstTimeLogin = true,
     this.dose1 = "",
     this.dose2 = "",
+    this.booster = "",
     this.dose1_date = "",
     this.dose2_date = "",
+    this.booster_date = "",
     this.last_checkin = "",
     this.last_checkin_address = "",
     this.dob = "",
@@ -58,6 +62,8 @@ class UserData {
     this.dose1_date = json["dose1_date"] ?? "";
     this.dose2 = json["dose2"] ?? "";
     this.dose2_date = json["dose2_date"] ?? "";
+    this.booster = json["booster"] ?? "";
+    this.booster_date = json["booster_date"] ?? "";
     this.last_checkin = json["last_checkin"] ?? "";
     this.last_checkin_address = json["last_checkin_address"] ?? "";
     this.dob = json["dob"] ?? "";
@@ -81,6 +87,8 @@ class UserData {
       "dose1_date": this.dose1_date,
       "dose2": this.dose2,
       "dose2_date": this.dose2_date,
+      "booster": this.booster,
+      "booster_date": this.booster_date,
       "last_checkin": this.last_checkin,
       "last_checkin_address": this.last_checkin_address,
       "dob": this.dob,

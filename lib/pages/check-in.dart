@@ -1,4 +1,5 @@
 import 'package:covid/components/button.dart';
+import 'package:covid/components/image-card-layout.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/pages/check-out.dart';
 import 'package:covid/pages/qr-result.dart';
@@ -161,9 +162,7 @@ class _CheckInPageState extends State<CheckInPage> {
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 5,
-                            ),
+                            SizedBox(height: 5),
                             Card(
                               child: Container(
                                 decoration: BoxDecoration(
@@ -202,9 +201,7 @@ class _CheckInPageState extends State<CheckInPage> {
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 5,
-                            ),
+                            SizedBox(height: 5),
                             userData["last_checkin"] != null &&
                                     userData["last_checkin"] != ""
                                 ? Card(
@@ -284,6 +281,95 @@ class _CheckInPageState extends State<CheckInPage> {
                                     ),
                                   )
                                 : Container(),
+                            Card(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Color.fromRGBO(16, 25, 32, 1),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(15),
+                                      child: TextBox(
+                                        value: "MySJ Trace",
+                                        fontColor: Colors.white,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(15),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 33,
+                                            height: 33,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.red,
+                                            ),
+                                            child: SvgPicture.asset(
+                                              "assets/images/traceCardIcon.svg",
+                                              width: 33,
+                                              height: 33,
+                                            ),
+                                          ),
+                                          SizedBox(width: 15),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextBox(
+                                                  value: "Setyp MySJ Trace",
+                                                  fontWeight: FontWeight.bold,
+                                                  fontColor: Colors.white,
+                                                  fontSize: 14,
+                                                ),
+                                                TextBox(
+                                                  value:
+                                                      "Help stop the spread of COVID-19 by enabling your MySJ Trace.",
+                                                  fontColor: Colors.white,
+                                                  fontSize: 14,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 15),
+                                          Icon(
+                                            Icons.keyboard_arrow_right,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Divider(
+                                        color: Color.fromRGBO(70, 71, 73, 1)),
+                                    Padding(
+                                      padding: EdgeInsets.all(15),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          TextBox(
+                                            value: "FAQs",
+                                            textAlign: TextAlign.end,
+                                            fontSize: 14,
+                                            fontColor: Colors.white,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
