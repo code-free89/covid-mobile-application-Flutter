@@ -1,4 +1,5 @@
 import 'package:covid/components/button.dart';
+import 'package:covid/components/image-card-layout.dart';
 import 'package:covid/components/textbox.dart';
 import 'package:covid/pages/check-out.dart';
 import 'package:covid/pages/qr-result.dart';
