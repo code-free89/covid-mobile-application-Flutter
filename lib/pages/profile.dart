@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:covid/components/profile/certificated.dart';
+import 'package:covid/components/profile/confirmation.dart';
 import 'package:covid/components/profile/info.dart';
 import 'package:covid/components/profile/name.dart';
 import 'package:covid/components/profile/pending.dart';
@@ -28,6 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Map<String, dynamic> userData = {};
   Map<String, dynamic> dose1Data = {};
   Map<String, dynamic> dose2Data = {};
+  Map<String, dynamic> boosterData = {};
   final ScrollController _scrollController = new ScrollController();
   bool _isScrolled = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -45,6 +47,13 @@ class _ProfilePageState extends State<ProfilePage> {
       getVaccineDataByID(userData["dose2"]).then((value) => {
             setState(() {
               dose2Data = value;
+            })
+          });
+    }
+    if (userData["booster"] != null && userData["booster"] != "") {
+      getVaccineDataByID(userData["booster"]).then((value) => {
+            setState(() {
+              boosterData = value;
             })
           });
     }
@@ -208,6 +217,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   RefreshCard(),
                   StatusCard(),
                   SizedBox(height: 15),
+                  ConfirmationCard(),
+                  SizedBox(height: 15),
                   uData.dose1 != ""
                       ? Stack(
                           children: [
@@ -267,6 +278,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   userData: userData,
                                                   dose1Data: dose1Data,
                                                   dose2Data: dose2Data,
+                                                  boosterData: boosterData,
                                                   onTap: () {
                                                     setState(() {
                                                       _showFrontSide = true;
